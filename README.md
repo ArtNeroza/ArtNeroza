@@ -2,7 +2,7 @@
 
 Personal site for **Art C. Neroza** — Full-Stack Developer & HubSpot Administrator.
 
-A deliberately small static site: one page, no framework runtime, ~4.8 KB of HTML over the wire.
+A deliberately small static site: one page, no framework runtime, ~6 KB over the wire.
 Built with [Astro](https://astro.build) in static mode and deployed to Vercel.
 
 ---
@@ -175,7 +175,8 @@ grid cards above them. Vertical padding still gives focus rings room.
 ### `inlineStylesheets: "always"`
 
 The stylesheet is ~7 KB — below the point where a separate, render-blocking
-request pays for itself. Inlining keeps the page to a **single HTTP request**.
+request pays for itself. Inlining keeps the document to a **single request** (Vercel
+Analytics adds one more at runtime).
 Revisit this if a blog is added, where a shared cached stylesheet starts to win.
 
 ### `<script is:inline>` in `Rail.astro`
@@ -205,22 +206,31 @@ Install Command:   npm install
 
 Push to `main` deploys production; every other branch gets a preview URL.
 
+### Analytics
+
+[Vercel Analytics](https://vercel.com/docs/analytics) is wired up via
+`<Analytics />` in `Base.astro`. It only reports from a Vercel deployment —
+locally it no-ops (and in dev it points at `va.vercel-scripts.com` for its debug
+build). Enable Analytics for the project in the Vercel dashboard or nothing is
+collected. In production the script is served first-party from
+`/_vercel/insights/script.js`, so no third-party origin is contacted.
+
 **Domain:** add `artneroza.com` under Domains with the **apex as primary** and
 `www` redirecting to it. If Vercel serves `www` as primary, it will contradict
 the canonical tag, which points at the apex.
 
 ### Security headers
 
-Not yet configured. The site ships no third-party JavaScript and has no forms or
-user input, so the attack surface is minimal — but headers are free. Add a
-`vercel.json`:
+Not yet configured. The site has no forms or user input and contacts no
+third-party origin in production, so the attack surface is minimal — but headers
+are free. Add a `vercel.json`:
 
 ```json
 {
   "headers": [{
     "source": "/(.*)",
     "headers": [
-      { "key": "Content-Security-Policy", "value": "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'" },
+      { "key": "Content-Security-Policy", "value": "default-src 'none'; script-src 'self' 'unsafe-inline'; connect-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'" },
       { "key": "X-Content-Type-Options", "value": "nosniff" },
       { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
       { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), camera=()" }
@@ -230,15 +240,18 @@ user input, so the attack surface is minimal — but headers are free. Add a
 ```
 
 `'unsafe-inline'` is required in both `script-src` and `style-src` because the
-carousel JS and the stylesheet are inlined by design. Vercel provides HTTPS and
-HSTS automatically.
+carousel JS and the stylesheet are inlined by design. `connect-src 'self'` is
+required for Vercel Analytics to POST its beacons to `/_vercel/insights/view` —
+without it `default-src 'none'` blocks them. Vercel provides HTTPS and HSTS
+automatically.
 
 ---
 
 ## Performance notes
 
-The page is ~4.8 KB brotli in a single request with **zero framework runtime**.
-The dominant cost is not the HTML — it is the Google Fonts request in
+The document is ~6 KB brotli with **zero framework runtime**; Vercel Analytics
+accounts for roughly 1.2 KB of that plus one runtime request.
+The dominant cost is still neither — it is the Google Fonts request in
 `Base.astro`, which pulls three families across six weights (roughly 60–120 KB
 of WOFF2 plus two extra DNS lookups and TLS handshakes).
 
@@ -262,4 +275,4 @@ it — measured, it saves ~170 bytes after brotli and costs hand-editability.
 
 ## Stack
 
-[Astro 5](https://astro.build) · [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) · vanilla CSS · vanilla JS · Vercel
+[Astro 5](https://astro.build) · [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) · [@vercel/analytics](https://vercel.com/docs/analytics) · vanilla CSS · vanilla JS · Vercel
