@@ -251,12 +251,15 @@ h1 .mid{color:var(--ink-mid);font-weight:600;}
 .status{
   display:flex;
   align-items:center;
+  flex-wrap:wrap;
   gap:.5rem;
   font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   font-size:.72rem;
   letter-spacing:.02em;
   color:var(--ink-dim);
 }
+.status strong{white-space:nowrap;}
+
 .dot{
   position:relative;
   width:.42rem;height:.42rem;border-radius:50%;
@@ -302,7 +305,15 @@ h1 .mid{color:var(--ink-mid);font-weight:600;}
   main{gap:1.6rem;padding:2rem 0;}
   .blurb{margin-top:.9rem;}
   .card{padding:.85rem 1rem .9rem;}
-  .foot{padding-top:1.1rem;gap:.75rem 1.25rem;}
+  .foot{
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding-top:1.1rem;
+    gap:.9rem;
+  }
+  .status{justify-content:center;}
 }
 
 @media (prefers-reduced-motion:reduce){
