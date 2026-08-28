@@ -43,8 +43,9 @@ src/
     Base.astro          <head>, meta, Open Graph, JSON-LD
   pages/
     index.astro         the page itself
+  fonts/                self-hosted woff2, latin subset
   styles/
-    global.css          all CSS (intentionally global — see Conventions)
+    global.css          @font-face + all CSS (intentionally global)
 backup/                 the original hand-written single-file version
 ```
 
@@ -99,6 +100,22 @@ Use ` · ` (U+00B7, spaced) as the stack separator to match the existing cards.
   compliant — auto-moving content lasting over 5s needs a stop mechanism.
 - The rail needs **4+ cards** before it actually scrolls. There is a dashed
   placeholder card in `Rail.astro`; delete it once there is real work to show.
+
+### Fonts
+
+Self-hosted in `src/fonts/`, latin subset only, with the `@font-face` block at
+the top of `global.css`. The descriptors were copied verbatim from the Google
+Fonts `css2` response, so rendering is identical to the hosted version.
+
+Archivo and IBM Plex Sans are **variable** fonts: both weights of each share a
+single file and download once, so six `@font-face` rules resolve to four
+requests. Paths are relative (`../fonts/…`) so Vite fingerprints them into
+`_astro/` and Vercel serves them with immutable caching — do not move them to
+`public/`, which would skip hashing.
+
+To change a weight, request the new css2 URL with a browser user-agent (Google
+serves woff2 only to modern UAs), take the `latin` blocks, and download the
+files they reference.
 
 ### Changing the domain
 
@@ -235,7 +252,7 @@ surface is minimal — but headers are free. Add a `vercel.json`:
   "headers": [{
     "source": "/(.*)",
     "headers": [
-      { "key": "Content-Security-Policy", "value": "default-src 'none'; script-src 'self' 'unsafe-inline'; connect-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'" },
+      { "key": "Content-Security-Policy", "value": "default-src 'none'; script-src 'self' 'unsafe-inline'; connect-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'" },
       { "key": "X-Content-Type-Options", "value": "nosniff" },
       { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
       { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), camera=()" }
@@ -256,14 +273,13 @@ Web Analytics; if you keep that, add `https://static.cloudflareinsights.com` to
 ## Performance notes
 
 The document is ~6 KB brotli with **zero framework runtime**; Vercel Analytics
-accounts for roughly 1.2 KB of that plus one runtime request.
-The dominant cost is still neither — it is the Google Fonts request in
-`Base.astro`, which pulls three families across six weights (roughly 60–120 KB
-of WOFF2 plus two extra DNS lookups and TLS handshakes).
+accounts for roughly 1.2 KB of that plus one runtime request. The four font
+files total ~110 KB, served first-party from `_astro/` with content hashes, so
+they cache immutably after the first visit.
 
-Lighthouse (desktop) scores 98/95/100/100, and the single performance item is
-that fonts stylesheet blocking render for ~342 ms. Unused weights have been
-dropped; self-hosting subset fonts is the remaining win. Minifying the HTML is not worth
+Fonts are now self-hosted, which removed that stylesheet along with two DNS
+lookups and two TLS handshakes. Lighthouse reports **no render-blocking
+resources**. Minifying the HTML is not worth
 it — measured, it saves ~170 bytes after brotli and costs hand-editability.
 
 ---
