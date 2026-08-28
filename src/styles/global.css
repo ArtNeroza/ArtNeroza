@@ -7,7 +7,7 @@
   --line-hi:#3a3f4d;
   --ink:#eceae5;           /* warm off-white */
   --ink-mid:#a2a7b4;
-  --ink-dim:#6e7482;
+  --ink-dim:#828997;       /* WCAG AA: 4.94:1 on surface, 5.32:1 on ground */
   --accent:#e8734a;        /* sunset coral */
   --accent-soft:#f0a184;
   --go:#43c98b;            /* available-now green */

@@ -213,7 +213,13 @@ Push to `main` deploys production; every other branch gets a preview URL.
 locally it no-ops (and in dev it points at `va.vercel-scripts.com` for its debug
 build). Enable Analytics for the project in the Vercel dashboard or nothing is
 collected. In production the script is served first-party from
-`/_vercel/insights/script.js`, so no third-party origin is contacted.
+`/_vercel/insights/script.js`.
+
+Note that the domain also sits behind Cloudflare, which injects **Cloudflare
+Web Analytics** (`static.cloudflareinsights.com/beacon.min.js`, ~9.7 KB) — a
+genuine third-party origin, and duplicate tracking alongside Vercel Analytics.
+Either disable it in the Cloudflare dashboard or allowlist that origin in the
+CSP below, or the script will be blocked.
 
 **Domain:** add `artneroza.com` under Domains with the **apex as primary** and
 `www` redirecting to it. If Vercel serves `www` as primary, it will contradict
@@ -221,9 +227,8 @@ the canonical tag, which points at the apex.
 
 ### Security headers
 
-Not yet configured. The site has no forms or user input and contacts no
-third-party origin in production, so the attack surface is minimal — but headers
-are free. Add a `vercel.json`:
+Not yet configured. The site has no forms and no user input, so the attack
+surface is minimal — but headers are free. Add a `vercel.json`:
 
 ```json
 {
@@ -242,8 +247,9 @@ are free. Add a `vercel.json`:
 `'unsafe-inline'` is required in both `script-src` and `style-src` because the
 carousel JS and the stylesheet are inlined by design. `connect-src 'self'` is
 required for Vercel Analytics to POST its beacons to `/_vercel/insights/view` —
-without it `default-src 'none'` blocks them. Vercel provides HTTPS and HSTS
-automatically.
+without it `default-src 'none'` blocks them. This policy also blocks Cloudflare
+Web Analytics; if you keep that, add `https://static.cloudflareinsights.com` to
+`script-src` and `connect-src`. Vercel provides HTTPS and HSTS automatically.
 
 ---
 
@@ -255,8 +261,9 @@ The dominant cost is still neither — it is the Google Fonts request in
 `Base.astro`, which pulls three families across six weights (roughly 60–120 KB
 of WOFF2 plus two extra DNS lookups and TLS handshakes).
 
-If page weight ever needs attention, that is the only lever worth pulling:
-drop unused weights, or self-host subset fonts. Minifying the HTML is not worth
+Lighthouse (desktop) scores 98/95/100/100, and the single performance item is
+that fonts stylesheet blocking render for ~342 ms. Unused weights have been
+dropped; self-hosting subset fonts is the remaining win. Minifying the HTML is not worth
 it — measured, it saves ~170 bytes after brotli and costs hand-editability.
 
 ---
