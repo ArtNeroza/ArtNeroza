@@ -1,0 +1,17 @@
+---
+import type { Project } from "../data/projects";
+type Props = Project;
+const { name, stack, url, year } = Astro.props;
+
+// no url -> plain div, no arrow, no hover/focus affordance
+const Tag = url ? "a" : "div";
+const linkAttrs = url ? { href: url, target: "_blank", rel: "noopener" } : {};
+---
+<Tag class="card" {...linkAttrs}>
+  <span class="name">{name}
+    {url && (
+      <svg class="arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+    )}
+  </span>
+  <span class="stack">{stack}{year && <span class="year">{year}</span>}</span>
+</Tag>

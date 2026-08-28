@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Art C. Neroza — Full-Stack Developer &amp; HubSpot Administrator</title>
+<meta name="description" content="Full-stack developer and HubSpot administrator in La Union, Philippines. I build web apps with Next.js, React, Supabase and WordPress. Open to remote work.">
+<link rel="canonical" href="https://artneroza.com/">
+<meta name="author" content="Art C. Neroza">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Art C. Neroza">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Art C. Neroza — Full-Stack Developer &amp; HubSpot Administrator">
+<meta property="og:description" content="Full-stack developer and HubSpot administrator in La Union, Philippines. I build web apps with Next.js, React, Supabase and WordPress. Open to remote work.">
+<meta property="og:url" content="https://artneroza.com/">
+<meta property="og:image" content="https://artneroza.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Art C. Neroza — Full-Stack Developer and HubSpot Administrator">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Art C. Neroza — Full-Stack Developer &amp; HubSpot Administrator">
+<meta name="twitter:description" content="Full-stack developer and HubSpot administrator in La Union, Philippines. I build web apps with Next.js, React, Supabase and WordPress. Open to remote work.">
+<meta name="twitter:image" content="https://artneroza.com/og.png">
+
+<meta name="theme-color" content="#101219">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23101219'/><text x='16' y='22' font-family='Georgia,serif' font-size='17' font-weight='700' fill='%23e8734a' text-anchor='middle'>A</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<style>
+  /* ---- tokens ------------------------------------------------ */
+  :root{
+    --ground:#101219;        /* blue-biased near-black */
+    --surface:#171a23;
+    --surface-hi:#1d2029;
+    --line:#262a35;
+    --line-hi:#3a3f4d;
+    --ink:#eceae5;           /* warm off-white */
+    --ink-mid:#a2a7b4;
+    --ink-dim:#6e7482;
+    --accent:#e8734a;        /* sunset coral */
+    --accent-soft:#f0a184;
+
+    --step-0:.875rem;
+    --step-1:1rem;
+    --step-2:clamp(.75rem,.68rem + .36vw,.89rem);
+    --display:clamp(2.6rem,1.4rem + 5.4vw,5.25rem);
+
+    --col:min(100% - 2.5rem, 46rem);
+    --ease:cubic-bezier(.2,.7,.3,1);
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+
+  body{
+    margin:0;
+    min-height:100svh;
+    display:grid;
+    place-items:center;
+    background:var(--ground);
+    color:var(--ink);
+    font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-size:var(--step-1);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* faint sunset haze behind the name — the one flourish */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+      radial-gradient(58rem 32rem at 22% 26%, rgba(232,115,74,.13), transparent 68%),
+      radial-gradient(46rem 28rem at 88% 92%, rgba(90,120,190,.10), transparent 70%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  main{
+    position:relative;
+    z-index:1;
+    width:var(--col);
+    display:flex;
+    flex-direction:column;
+    gap:2.25rem;
+    padding:3rem 0;
+  }
+
+  /* ---- masthead ---------------------------------------------- */
+  .eyebrow{
+    margin:0;
+    font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:.72rem;
+    font-weight:500;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--accent);
+  }
+
+  h1{
+    margin:.6rem 0 0;
+    font-family:Archivo,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight:700;
+    font-size:var(--display);
+    line-height:.92;
+    letter-spacing:-.035em;
+    text-wrap:balance;
+  }
+  h1 .mid{color:var(--ink-mid);font-weight:600;}
+
+  .blurb{
+    margin:1.15rem 0 0;
+    max-width:37rem;
+    font-size:var(--step-2);
+    color:var(--ink-mid);
+  }
+  .blurb strong{color:var(--ink);font-weight:500;}
+
+  /* ---- project grid ------------------------------------------ */
+  .work{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:.75rem;
+  }
+
+  .card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:.3rem;
+    padding:1.05rem 1.15rem 1.1rem;
+    border:1px solid var(--line);
+    border-radius:.55rem;
+    background:var(--surface);
+    color:inherit;
+    text-decoration:none;
+    transition:background .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease);
+  }
+  .card:hover,.card:focus-visible{
+    background:var(--surface-hi);
+    border-color:var(--line-hi);
+    transform:translateY(-2px);
+  }
+  .card:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+
+  .card .name{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    font-weight:500;
+    font-size:var(--step-1);
+    letter-spacing:-.005em;
+  }
+  .card .arrow{
+    flex:none;
+    color:var(--ink-dim);
+    transition:color .25s var(--ease), transform .25s var(--ease);
+  }
+  .card:hover .arrow,.card:focus-visible .arrow{
+    color:var(--accent);
+    transform:translate(3px,-3px);
+  }
+  .card .stack{
+    font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:.7rem;
+    letter-spacing:.02em;
+    color:var(--ink-dim);
+  }
+
+  /* ---- recents rail ------------------------------------------- */
+  .recents{display:flex;flex-direction:column;gap:.7rem;}
+
+  .rail-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem;
+  }
+  .label{
+    margin:0;
+    font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:.68rem;
+    font-weight:500;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+  }
+
+  .rail-nav{display:flex;gap:.35rem;}
+  .rail-btn{
+    display:grid;
+    place-items:center;
+    width:1.85rem;
+    height:1.85rem;
+    padding:0;
+    border:1px solid var(--line);
+    border-radius:.4rem;
+    background:var(--surface);
+    color:var(--ink-dim);
+    cursor:pointer;
+    transition:color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease), opacity .2s var(--ease);
+  }
+  .rail-btn:hover:not(:disabled){color:var(--accent);border-color:var(--line-hi);background:var(--surface-hi);}
+  .rail-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .rail-btn:disabled{opacity:.3;cursor:default;}
+  .rail-btn svg{width:.85rem;height:.85rem;display:block;}
+
+  /* 3-up track; scroll-snap does the sliding, JS only drives the arrows */
+  .rail{
+    display:grid;
+    grid-auto-flow:column;
+    grid-auto-columns:calc((100% - 1.5rem) / 3);
+    gap:.75rem;
+    overflow-x:auto;
+    overscroll-behavior-x:contain;
+    scroll-snap-type:x mandatory;
+    scroll-behavior:smooth;
+    scrollbar-width:none;
+    padding:4px;        /* room for focus rings inside the scroller */
+    margin:-4px;
+  }
+  .rail::-webkit-scrollbar{display:none;}
+  .rail>.card{scroll-snap-align:start;}
+
+  .card--ph{
+    border-style:dashed;
+    background:transparent;
+    color:var(--ink-dim);
+  }
+  .card--ph .name{color:var(--ink-dim);font-weight:400;}
+
+  /* ---- footer ------------------------------------------------- */
+  .foot{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem 1.5rem;
+    padding-top:1.5rem;
+    border-top:1px solid var(--line);
+  }
+
+  .social{display:flex;align-items:center;gap:.35rem;}
+  .social a{
+    display:grid;
+    place-items:center;
+    width:2.2rem;
+    height:2.2rem;
+    border-radius:.45rem;
+    color:var(--ink-dim);
+    transition:color .2s var(--ease), background .2s var(--ease);
+  }
+  .social a:hover,.social a:focus-visible{color:var(--accent);background:var(--surface);}
+  .social a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .social svg{width:1.15rem;height:1.15rem;fill:currentColor;display:block;}
+
+  .status{
+    display:flex;
+    align-items:center;
+    gap:.5rem;
+    font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:.72rem;
+    letter-spacing:.02em;
+    color:var(--ink-dim);
+  }
+  .dot{
+    width:.42rem;height:.42rem;border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 0 3px rgba(232,115,74,.16);
+    flex:none;
+  }
+
+  /* ---- entrance ------------------------------------------------ */
+  .rise{opacity:0;transform:translateY(8px);animation:rise .6s var(--ease) forwards;}
+  .rise:nth-child(1){animation-delay:.04s}
+  .rise:nth-child(2){animation-delay:.14s}
+  .rise:nth-child(3){animation-delay:.22s}
+  .rise:nth-child(4){animation-delay:.3s}
+  @keyframes rise{to{opacity:1;transform:none;}}
+
+  @media (max-width:48rem){
+    .rail{grid-auto-columns:calc((100% - .75rem) / 2);}
+  }
+
+  @media (max-width:34rem){
+    .work{grid-template-columns:1fr;gap:.6rem;}
+    .rail{grid-auto-columns:88%;gap:.6rem;}
+    main{gap:1.6rem;}
+    main{gap:1.6rem;padding:2rem 0;}
+    .blurb{margin-top:.9rem;}
+    .card{padding:.85rem 1rem .9rem;}
+    .foot{padding-top:1.1rem;gap:.75rem 1.25rem;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms !important;transition-duration:.001ms !important;}
+    .rise{opacity:1;transform:none;}
+  }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://artneroza.com/#person",
+  "name": "Art C. Neroza",
+  "givenName": "Art",
+  "familyName": "Neroza",
+  "url": "https://artneroza.com/",
+  "image": "https://artneroza.com/og.png",
+  "email": "mailto:artneroza@gmail.com",
+  "jobTitle": ["Full-Stack Developer", "HubSpot Administrator"],
+  "description": "Full-stack developer and HubSpot administrator building web applications with Next.js, React, Supabase, WordPress and HubSpot.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "La Union",
+    "addressCountry": "PH"
+  },
+  "knowsAbout": ["Next.js","React.js","Node.js","Express.js","Vue.js","Supabase","WordPress","HubSpot CRM","Headless CMS","GraphQL","Shopify"],
+  "sameAs": [
+    "https://www.linkedin.com/in/art-neroza/",
+    "https://github.com/ArtNeroza"
+  ]
+}
+</script>
+</head>
+<body>
+
+<main>
+
+  <header class="rise">
+    
+    <h1>Art C.&nbsp;<span class="mid">Neroza</span></h1>
+    <p class="eyebrow">Full-Stack Developer &middot; HubSpot Administrator</p>
+    <p class="blurb">
+    I build scalable web applications from reusable components across the whole stack - <strong>Node.js</strong>, <strong>React.js</strong>,
+    <strong>Next.js</strong>, <strong>Supabase</strong>, <strong>WordPress</strong>, and
+    <strong>HubSpot</strong> - from La&nbsp;Union, Philippines.
+  </p>
+  </header>
+
+  <nav class="work rise" aria-label="Demo projects">
+
+    <a class="card" href="#" target="_blank" rel="noopener">
+      <span class="name">Headless WordPress
+        <svg class="arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </span>
+      <span class="stack">WP GraphQL · Next.js · ISR</span>
+    </a>
+
+    <a class="card" href="#" target="_blank" rel="noopener">
+      <span class="name">Web App
+        <svg class="arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </span>
+      <span class="stack">Next.js · Supabase · Auth + RLS</span>
+    </a>
+
+    <a class="card" href="#" target="_blank" rel="noopener">
+      <span class="name">CRM Integration
+        <svg class="arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </span>
+      <span class="stack">HubSpot Ops Hub · Custom code · Webhooks</span>
+    </a>
+
+    <a class="card" href="#" target="_blank" rel="noopener">
+      <span class="name">Storefront &amp; Theme
+        <svg class="arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </span>
+      <span class="stack">Shopify · Custom WP theme · Gutenberg</span>
+    </a>
+
+  </nav>
+
+  <section class="recents rise" aria-labelledby="recents-label">
+    <div class="rail-head">
+      <h2 class="label" id="recents-label">Recents</h2>
+      <div class="rail-nav">
+        <button class="rail-btn" type="button" data-dir="-1" aria-label="Scroll to previous recent work" aria-controls="rail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+        <button class="rail-btn" type="button" data-dir="1" aria-label="Scroll to next recent work" aria-controls="rail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+    </div>
+
+    <div class="rail" id="rail" tabindex="0" role="group" aria-labelledby="recents-label">
+      <a class="card" href="#" target="_blank" rel="noopener">
+        <span class="name">Eternal Homes
+          <svg class="arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </span>
+        <span class="stack">Custom WordPress theme</span>
+      </a>
+      <a class="card" href="#" target="_blank" rel="noopener">
+        <span class="name">Eternal Homes Portal
+          <svg class="arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </span>
+        <span class="stack">Next.js · Express.js · HubSpot API</span>
+      </a>
+      <a class="card" href="#" target="_blank" rel="noopener">
+        <span class="name">DavidWillardsGroup
+          <svg class="arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </span>
+        <span class="stack">Custom WP · REST API</span>
+      </a>
+
+      <!-- SAMPLE placeholder — swap for a real project or delete -->
+      <div class="card card--ph" aria-hidden="true">
+        <span class="name">Sample Project</span>
+        <span class="stack">Stack · goes · here</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot rise">
+    <div class="social">
+      <a data-id="github" href="https://github.com/ArtNeroza" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.27 5.69.41.36.78 1.06.78 2.15v3.19c0 .31.21.67.8.55A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg>
+      </a>
+      <a data-id="linkedin" href="https://www.linkedin.com/in/art-neroza/" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05a3.75 3.75 0 0 1 3.37-1.85c3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14Zm1.78 13.02H3.55V9h3.57v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0Z"/></svg>
+      </a>
+      <a data-id="email" href="mailto:artneroza@gmail.com" aria-label="Email">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 4h19A1.5 1.5 0 0 1 23 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-19A1.5 1.5 0 0 1 1 18.5v-13A1.5 1.5 0 0 1 2.5 4Zm.9 2 8.6 6.1L20.6 6H3.4ZM21 7.6l-8.42 5.97a1 1 0 0 1-1.16 0L3 7.6V18h18V7.6Z"/></svg>
+      </a>
+    </div>
+
+    <p class="status"><span class="dot" aria-hidden="true"></span>Available for contract or Gig &amp; full-time(Remote) · GMT+8</p>
+  </footer>
+
+</main>
+
+
+<script>
+(function(){
+  var rail = document.getElementById('rail');
+  if(!rail) return;
+  var btns  = document.querySelectorAll('.rail-btn');
+  var calm  = matchMedia('(prefers-reduced-motion: reduce)');
+  var DWELL = 5000, timer = null;
+
+  function step(){
+    var c = rail.firstElementChild;
+    if(!c) return rail.clientWidth;
+    var gap = parseFloat(getComputedStyle(rail).columnGap) || 0;
+    return c.getBoundingClientRect().width + gap;
+  }
+  function maxScroll(){ return rail.scrollWidth - rail.clientWidth; }
+  function overflows(){ return maxScroll() > 1; }
+
+  function sync(){
+    btns[0].disabled = !overflows() || rail.scrollLeft <= 1;
+    btns[1].disabled = !overflows() || rail.scrollLeft >= maxScroll() - 1;
+  }
+  function go(dir){
+    var to = rail.scrollLeft + step() * dir;
+    if(dir > 0 && rail.scrollLeft >= maxScroll() - 1) to = 0;   // wrap at the end
+    rail.scrollTo({left: to, behavior: 'smooth'});
+  }
+
+  function stop(){ clearInterval(timer); timer = null; }
+  function play(){
+    stop();
+    if(calm.matches || !overflows()) return;                    // no motion, nothing to move
+    timer = setInterval(function(){ go(1); }, DWELL);
+  }
+
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){ go(Number(b.dataset.dir)); play(); });
+  });
+
+  // pause whenever a human is engaged with it, or the tab is hidden
+  ['pointerenter','focusin','touchstart'].forEach(function(e){ rail.addEventListener(e, stop, {passive:true}); });
+  ['pointerleave','focusout'].forEach(function(e){ rail.addEventListener(e, play, {passive:true}); });
+  document.querySelector('.rail-nav').addEventListener('pointerenter', stop, {passive:true});
+  document.querySelector('.rail-nav').addEventListener('pointerleave', play, {passive:true});
+  document.addEventListener('visibilitychange', function(){ document.hidden ? stop() : play(); });
+
+  rail.addEventListener('scroll', sync, {passive:true});
+  addEventListener('resize', function(){ sync(); play(); }, {passive:true});
+  calm.addEventListener('change', play);
+
+  sync(); play();
+})();
+</script>
+</body>
+</html>

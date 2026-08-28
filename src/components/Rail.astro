@@ -1,0 +1,77 @@
+---
+import Card from "./Card.astro";
+import { recents } from "../data/projects";
+---
+<section class="recents rise" aria-labelledby="recents-label">
+  <div class="rail-head">
+    <h2 class="label" id="recents-label">Recents</h2>
+    <div class="rail-nav">
+      <button class="rail-btn" type="button" data-dir="-1" aria-label="Scroll to previous recent work" aria-controls="rail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+      <button class="rail-btn" type="button" data-dir="1" aria-label="Scroll to next recent work" aria-controls="rail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+    </div>
+  </div>
+
+  <div class="rail" id="rail" tabindex="0" role="group" aria-labelledby="recents-label">
+    {recents.map((p) => <Card {...p} />)}
+
+    <!-- SAMPLE placeholder — swap for a real project or delete -->
+    <div class="card card--ph" aria-hidden="true">
+      <span class="name">Placeholder Project </span>
+      <span class="stack">Stack · goes · here<span class="year">20XX</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- is:inline keeps this in the document instead of emitting a separate 2 KB request -->
+<script is:inline>
+(function(){
+  var rail = document.getElementById('rail');
+  if(!rail) return;
+  var btns  = document.querySelectorAll('.rail-btn');
+  var calm  = matchMedia('(prefers-reduced-motion: reduce)');
+  var DWELL = 5000, timer = null;
+
+  function step(){
+    var c = rail.firstElementChild;
+    if(!c) return rail.clientWidth;
+    var gap = parseFloat(getComputedStyle(rail).columnGap) || 0;
+    return c.getBoundingClientRect().width + gap;
+  }
+  function maxScroll(){ return rail.scrollWidth - rail.clientWidth; }
+  function overflows(){ return maxScroll() > 1; }
+
+  function sync(){
+    btns[0].disabled = !overflows() || rail.scrollLeft <= 1;
+    btns[1].disabled = !overflows() || rail.scrollLeft >= maxScroll() - 1;
+  }
+  function go(dir){
+    var to = rail.scrollLeft + step() * dir;
+    if(dir > 0 && rail.scrollLeft >= maxScroll() - 1) to = 0;   // wrap at the end
+    rail.scrollTo({left: to, behavior: 'smooth'});
+  }
+
+  function stop(){ clearInterval(timer); timer = null; }
+  function play(){
+    stop();
+    if(calm.matches || !overflows()) return;                    // no motion, nothing to move
+    timer = setInterval(function(){ go(1); }, DWELL);
+  }
+
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){ go(Number(b.dataset.dir)); play(); });
+  });
+
+  // pause whenever a human is engaged with it, or the tab is hidden
+  ['pointerenter','focusin','touchstart'].forEach(function(e){ rail.addEventListener(e, stop, {passive:true}); });
+  ['pointerleave','focusout'].forEach(function(e){ rail.addEventListener(e, play, {passive:true}); });
+  document.querySelector('.rail-nav').addEventListener('pointerenter', stop, {passive:true});
+  document.querySelector('.rail-nav').addEventListener('pointerleave', play, {passive:true});
+  document.addEventListener('visibilitychange', function(){ document.hidden ? stop() : play(); });
+
+  rail.addEventListener('scroll', sync, {passive:true});
+  addEventListener('resize', function(){ sync(); play(); }, {passive:true});
+  calm.addEventListener('change', play);
+
+  sync(); play();
+})();
+</script>

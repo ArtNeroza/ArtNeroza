@@ -1,0 +1,84 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Art C. Neroza — Full-Stack Developer & HubSpot Administrator",
+  description = "Full-stack developer and HubSpot administrator in La Union, Philippines. I build web apps with Next.js, React, Supabase and WordPress. Open to remote work.",
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL("og.png", Astro.site);
+
+const favicon =
+  "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23101219'/><text x='16' y='22' font-family='Georgia,serif' font-size='17' font-weight='700' fill='%23e8734a' text-anchor='middle'>A</text></svg>";
+
+const person = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": new URL("#person", Astro.site).href,
+  name: "Art C. Neroza",
+  givenName: "Art",
+  familyName: "Neroza",
+  url: new URL("/", Astro.site).href,
+  image: ogImage.href,
+  email: "mailto:artneroza@gmail.com",
+  jobTitle: ["Full-Stack Developer", "HubSpot Administrator"],
+  description:
+    "Full-stack developer and HubSpot administrator building web applications with Next.js, React, Supabase, WordPress and HubSpot.",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "La Union",
+    addressCountry: "PH",
+  },
+  knowsAbout: [
+    "Next.js", "React.js", "Node.js", "Express.js", "Vue.js", "Supabase",
+    "WordPress", "HubSpot CRM", "Headless CMS", "GraphQL", "Shopify", "Astro", "PostgreSQL", "MongoDb", "AWS",
+  ],
+  sameAs: [
+    "https://www.linkedin.com/in/art-neroza/",
+    "https://github.com/ArtNeroza",
+  ],
+};
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title}</title>
+<meta name="description" content={description}>
+<link rel="canonical" href={canonical}>
+<meta name="author" content="Art C. Neroza">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Art C. Neroza">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:url" content={canonical}>
+<meta property="og:image" content={ogImage}>
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Art C. Neroza — Full-Stack Developer and HubSpot Administrator">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content={title}>
+<meta name="twitter:description" content={description}>
+<meta name="twitter:image" content={ogImage}>
+
+<meta name="theme-color" content="#101219">
+<link rel="icon" href={favicon}>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<script type="application/ld+json" set:html={JSON.stringify(person)} is:inline />
+</head>
+<body>
+  <slot />
+</body>
+</html>

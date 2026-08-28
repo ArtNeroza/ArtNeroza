@@ -1,0 +1,313 @@
+/* ---- tokens ------------------------------------------------ */
+:root{
+  --ground:#101219;        /* blue-biased near-black */
+  --surface:#171a23;
+  --surface-hi:#1d2029;
+  --line:#262a35;
+  --line-hi:#3a3f4d;
+  --ink:#eceae5;           /* warm off-white */
+  --ink-mid:#a2a7b4;
+  --ink-dim:#6e7482;
+  --accent:#e8734a;        /* sunset coral */
+  --accent-soft:#f0a184;
+  --go:#43c98b;            /* available-now green */
+
+  --step-0:.875rem;
+  --step-1:1rem;
+  --step-2:clamp(.75rem,.68rem + .36vw,.89rem);
+  --display:clamp(2.6rem,1.4rem + 5.4vw,5.25rem);
+
+  --col:min(100% - 2.5rem, 46rem);
+  --ease:cubic-bezier(.2,.7,.3,1);
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+
+body{
+  margin:0;
+  min-height:100svh;
+  display:grid;
+  /* minmax(0,1fr) — without it the implicit column sizes to max-content and
+     the 100% in --col resolves against that, so main overflows narrow screens */
+  grid-template-columns:minmax(0,1fr);
+  place-items:center;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:var(--step-1);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* faint sunset haze behind the name — the one flourish */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(58rem 32rem at 22% 26%, rgba(232,115,74,.13), transparent 68%),
+    radial-gradient(46rem 28rem at 88% 92%, rgba(90,120,190,.10), transparent 70%);
+  pointer-events:none;
+  z-index:0;
+}
+
+main{
+  position:relative;
+  z-index:1;
+  width:var(--col);
+  display:flex;
+  flex-direction:column;
+  gap:2.25rem;
+  padding:3rem 0;
+}
+
+/* ---- masthead ---------------------------------------------- */
+.eyebrow{
+  margin:0;
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.72rem;
+  font-weight:500;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+
+h1{
+  margin:.6rem 0 0;
+  font-family:Archivo,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight:700;
+  font-size:var(--display);
+  line-height:.92;
+  letter-spacing:-.035em;
+  text-wrap:balance;
+}
+h1 .mid{color:var(--ink-mid);font-weight:600;}
+
+.blurb{
+  margin:1.15rem 0 0;
+  max-width:37rem;
+  font-size:var(--step-2);
+  color:var(--ink-mid);
+}
+.blurb strong{color:var(--ink);font-weight:500;}
+
+/* ---- project grid ------------------------------------------ */
+.work{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:.75rem;
+}
+
+.card{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:.3rem;
+  padding:1.05rem 1.15rem 1.1rem;
+  border:1px solid var(--line);
+  border-radius:.55rem;
+  background:var(--surface);
+  color:inherit;
+  text-decoration:none;
+  transition:background .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease);
+}
+.card:hover,.card:focus-visible{
+  background:var(--surface-hi);
+  border-color:var(--line-hi);
+  transform:translateY(-2px);
+}
+.card:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+
+.card .name{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.75rem;
+  font-weight:500;
+  font-size:var(--step-1);
+  letter-spacing:-.005em;
+}
+.card .arrow{
+  flex:none;
+  color:var(--ink-dim);
+  transition:color .25s var(--ease), transform .25s var(--ease);
+}
+.card:hover .arrow,.card:focus-visible .arrow{
+  color:var(--accent);
+  transform:translate(3px,-3px);
+}
+.card .stack{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:.6rem;
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.7rem;
+  letter-spacing:.02em;
+  color:var(--ink-dim);
+}
+.card .year{
+  flex:none;
+  color:var(--ink-mid);
+  font-variant-numeric:tabular-nums;
+}
+
+/* ---- recents rail ------------------------------------------- */
+.recents{display:flex;flex-direction:column;gap:.7rem;}
+
+.rail-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+}
+.label{
+  margin:0;
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.68rem;
+  font-weight:500;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--ink-dim);
+}
+
+.rail-nav{display:flex;gap:.35rem;}
+.rail-btn{
+  display:grid;
+  /* minmax(0,1fr) — without it the implicit column sizes to max-content and
+     the 100% in --col resolves against that, so main overflows narrow screens */
+  grid-template-columns:minmax(0,1fr);
+  place-items:center;
+  width:1.85rem;
+  height:1.85rem;
+  padding:0;
+  border:1px solid var(--line);
+  border-radius:.4rem;
+  background:var(--surface);
+  color:var(--ink-dim);
+  cursor:pointer;
+  transition:color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease), opacity .2s var(--ease);
+}
+.rail-btn:hover:not(:disabled){color:var(--accent);border-color:var(--line-hi);background:var(--surface-hi);}
+.rail-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.rail-btn:disabled{opacity:.3;cursor:default;}
+.rail-btn svg{width:.85rem;height:.85rem;display:block;}
+
+/* 3-up track; scroll-snap does the sliding, JS only drives the arrows */
+.rail{
+  display:grid;
+  grid-auto-flow:column;
+  grid-auto-columns:calc((100% - 1.5rem) / 3);
+  gap:.75rem;
+  overflow-x:auto;
+  overscroll-behavior-x:contain;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  scrollbar-width:none;
+  padding:4px 0;      /* vertical room for focus rings; 0 inline so
+                         card edges line up with the .work grid above */
+  margin:-4px 0;
+}
+.rail::-webkit-scrollbar{display:none;}
+.rail>.card{scroll-snap-align:start;}
+
+.card--ph{
+  border-style:dashed;
+  background:transparent;
+  color:var(--ink-dim);
+}
+.card--ph .name{color:var(--ink-dim);font-weight:400;}
+
+/* ---- footer ------------------------------------------------- */
+.foot{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem 1.5rem;
+  padding-top:1.5rem;
+  border-top:1px solid var(--line);
+}
+
+.social{display:flex;align-items:center;gap:.35rem;}
+.social a{
+  display:grid;
+  /* minmax(0,1fr) — without it the implicit column sizes to max-content and
+     the 100% in --col resolves against that, so main overflows narrow screens */
+  grid-template-columns:minmax(0,1fr);
+  place-items:center;
+  width:2.2rem;
+  height:2.2rem;
+  border-radius:.45rem;
+  color:var(--ink-dim);
+  transition:color .2s var(--ease), background .2s var(--ease);
+}
+.social a:hover,.social a:focus-visible{color:var(--accent);background:var(--surface);}
+.social a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.social svg{width:1.15rem;height:1.15rem;fill:currentColor;display:block;}
+
+.status{
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.72rem;
+  letter-spacing:.02em;
+  color:var(--ink-dim);
+}
+.dot{
+  position:relative;
+  width:.42rem;height:.42rem;border-radius:50%;
+  background:var(--go);
+  flex:none;
+  animation:beacon 2.4s ease-in-out infinite;
+}
+/* expanding ring — the "live" ping */
+.dot::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  background:var(--go);
+  animation:ping 2.4s var(--ease) infinite;
+}
+
+@keyframes beacon{
+  0%,100%{box-shadow:0 0 0 3px rgba(67,201,139,.18), 0 0 5px rgba(67,201,139,.45);}
+  50%    {box-shadow:0 0 0 4px rgba(67,201,139,.12), 0 0 13px rgba(67,201,139,.95);}
+}
+@keyframes ping{
+  0%  {transform:scale(1);opacity:.5;}
+  70% {transform:scale(3);opacity:0;}
+  100%{transform:scale(3);opacity:0;}
+}
+
+/* ---- entrance ------------------------------------------------ */
+.rise{opacity:0;transform:translateY(8px);animation:rise .6s var(--ease) forwards;}
+.rise:nth-child(1){animation-delay:.04s}
+.rise:nth-child(2){animation-delay:.14s}
+.rise:nth-child(3){animation-delay:.22s}
+.rise:nth-child(4){animation-delay:.3s}
+@keyframes rise{to{opacity:1;transform:none;}}
+
+@media (max-width:48rem){
+  .rail{grid-auto-columns:calc((100% - .75rem) / 2);}
+}
+
+@media (max-width:34rem){
+  .work{grid-template-columns:1fr;gap:.6rem;}
+  .rail{grid-auto-columns:100%;gap:.6rem;}
+  main{gap:1.6rem;padding:2rem 0;}
+  .blurb{margin-top:.9rem;}
+  .card{padding:.85rem 1rem .9rem;}
+  .foot{padding-top:1.1rem;gap:.75rem 1.25rem;}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;transition-duration:.001ms !important;}
+  .rise{opacity:1;transform:none;}
+  .dot::after{display:none;}
+  .dot{box-shadow:0 0 0 3px rgba(67,201,139,.18), 0 0 6px rgba(67,201,139,.5);}
+}
