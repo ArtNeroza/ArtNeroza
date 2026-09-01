@@ -360,6 +360,11 @@ h1 .mid{color:var(--ink-mid);font-weight:600;}
   main{gap:1.6rem;padding:2rem 0;}
   .blurb{margin-top:.9rem;}
   .card{padding:.85rem 1rem .9rem;}
+  /* Lighthouse flags text under 12px as illegible on small screens */
+  .eyebrow,.status{font-size:.75rem;}
+  .card .stack{font-size:.75rem;}
+  .label{font-size:.75rem;}
+
   .foot{
     flex-direction:column;
     align-items:center;

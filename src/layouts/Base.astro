@@ -2,6 +2,12 @@
 import "../styles/global.css";
 import Analytics from "@vercel/analytics/astro";
 
+// ?url gives the fingerprinted _astro/ path so these can be preloaded
+import fontArchivo from "../fonts/archivo-latin-var.woff2?url";
+import fontSans from "../fonts/ibm-plex-sans-latin-var.woff2?url";
+import fontMono400 from "../fonts/ibm-plex-mono-latin-400.woff2?url";
+import fontMono500 from "../fonts/ibm-plex-mono-latin-500.woff2?url";
+
 interface Props {
   title?: string;
   description?: string;
@@ -74,6 +80,12 @@ const person = {
 <meta name="twitter:image" content={ogImage}>
 
 <meta name="theme-color" content="#101219">
+
+<!-- every face is used above the fold; preloading removes the swap reflow -->
+<link rel="preload" href={fontArchivo} as="font" type="font/woff2" crossorigin>
+<link rel="preload" href={fontSans} as="font" type="font/woff2" crossorigin>
+<link rel="preload" href={fontMono400} as="font" type="font/woff2" crossorigin>
+<link rel="preload" href={fontMono500} as="font" type="font/woff2" crossorigin>
 <link rel="icon" href={favicon}>
 <script type="application/ld+json" set:html={JSON.stringify(person)} is:inline />
 <Analytics />
