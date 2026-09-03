@@ -119,6 +119,28 @@ main{
 }
 
 /* ---- masthead ---------------------------------------------- */
+.sr-only{
+  position:absolute;
+  width:1px;height:1px;
+  margin:-1px;padding:0;
+  overflow:hidden;
+  clip-path:inset(50%);
+  white-space:nowrap;
+  border:0;
+}
+
+/* typewriter caret on the tagline */
+.caret{
+  display:inline-block;
+  width:.5em;
+  height:1em;
+  margin-left:.14em;
+  background:currentColor;
+  vertical-align:-.14em;
+  animation:blink 1.05s steps(1,end) infinite;
+}
+@keyframes blink{50%{opacity:0;}}
+
 .eyebrow{
   margin:0;
   font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -313,13 +335,49 @@ h1 .mid{color:var(--ink-mid);font-weight:600;}
   letter-spacing:.02em;
   color:var(--ink-dim);
 }
-.status strong{white-space:nowrap;}
+/* coffee cup with rising steam, sized to the surrounding text */
+.cup{
+  width:1.45em;
+  height:1.45em;
+  vertical-align:-.21em;   /* ~2px higher than the text baseline sits */
+  color:var(--ink);        /* white cup against the dim invitation text */
+  overflow:visible;
+}
+.cup .steam path{
+  transform-box:fill-box;
+  transform-origin:50% 100%;
+  animation:steam 2.8s ease-in-out infinite;
+}
+.cup .steam path:nth-child(2){animation-delay:.9s;}
+@keyframes steam{
+  0%  {opacity:0;   transform:translateY(2px)  scaleY(.55);}
+  30% {opacity:.85;}
+  60% {opacity:.55;}
+  100%{opacity:0;   transform:translateY(-3px) scaleY(1.2);}
+}
+
+/* email flows straight after the sentence; wraps as a unit when space runs out */
+.status .mail{
+  color:var(--accent);
+  text-decoration:none;
+  white-space:nowrap;
+  border-bottom:1px solid transparent;
+  transition:color .2s var(--ease), border-color .2s var(--ease);
+}
+.status .mail:hover,.status .mail:focus-visible{
+  color:var(--accent-soft);
+  border-bottom-color:currentColor;
+}
+.status .mail:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px;}
 
 .dot{
+  /* inline so it leads the sentence instead of stranding on its own line */
+  display:inline-block;
+  vertical-align:middle;
+  margin-right:.5rem;
   position:relative;
   width:.42rem;height:.42rem;border-radius:50%;
   background:var(--go);
-  flex:none;
   animation:beacon 2.4s ease-in-out infinite;
 }
 /* expanding ring — the "live" ping */
@@ -380,5 +438,7 @@ h1 .mid{color:var(--ink-mid);font-weight:600;}
   *{animation-duration:.001ms !important;transition-duration:.001ms !important;}
   .rise{opacity:1;transform:none;}
   .dot::after{display:none;}
+  .caret{display:none;}
+  .cup .steam path{opacity:.8;transform:none;}
   .dot{box-shadow:0 0 0 3px rgba(67,201,139,.18), 0 0 6px rgba(67,201,139,.5);}
 }
