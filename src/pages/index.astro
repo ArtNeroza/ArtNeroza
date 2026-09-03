@@ -41,6 +41,25 @@ import { featured } from "../data/projects";
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 4h19A1.5 1.5 0 0 1 23 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-19A1.5 1.5 0 0 1 1 18.5v-13A1.5 1.5 0 0 1 2.5 4Zm.9 2 8.6 6.1L20.6 6H3.4ZM21 7.6l-8.42 5.97a1 1 0 0 1-1.16 0L3 7.6V18h18V7.6Z"/></svg>
         </a>
       </div>
+
+      <div class="prefs">
+        <p class="prefs-label">Your eyes matter!</p>
+        <div class="prefs-row" role="group" aria-label="Appearance">
+          <button type="button" data-theme-set="light" aria-label="Light theme" aria-pressed="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2 12h2.4M19.6 12H22M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg>
+          </button>
+          <button type="button" data-theme-set="dark" aria-label="Dark theme" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
+          </button>
+          <span class="prefs-sep" aria-hidden="true"></span>
+          <button type="button" class="swatch" data-accent-set="amber" aria-label="Low amber accent" aria-pressed="false"><span style="background:#c0a469"></span></button>
+          <button type="button" class="swatch" data-accent-set="moss" aria-label="Moss accent" aria-pressed="false"><span style="background:#a8cb6b"></span></button>
+          <button type="button" class="swatch" data-accent-set="oxblood" aria-label="Oxblood accent" aria-pressed="false"><span style="background:#ef8092"></span></button>
+          <button type="button" class="swatch" data-accent-set="dusk" aria-label="Dusk blue accent" aria-pressed="false"><span style="background:#93aac9"></span></button>
+          <button type="button" class="swatch" data-accent-set="petrol" aria-label="Petrol accent" aria-pressed="false"><span style="background:#79b6c9"></span></button>
+          <button type="button" class="swatch" data-accent-set="seaglass" aria-label="Sea glass accent" aria-pressed="false"><span style="background:#7fb6ae"></span></button>
+        </div>
+      </div>
     </footer>
 
   </main>
@@ -114,6 +133,60 @@ import { featured } from "../data/projects";
 
   measure();
   play();
+})();
+</script>
+
+<script is:inline>
+(function () {
+  var root = document.documentElement;
+  var btns = document.querySelectorAll("[data-theme-set]");
+  var meta = document.querySelector('meta[name="theme-color"]');
+
+  function apply(t) {
+    root.dataset.theme = t;
+    btns.forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.themeSet === t));
+    });
+    // keep the browser chrome in step with the page
+    if (meta) {
+      meta.setAttribute("content",
+        getComputedStyle(root).getPropertyValue("--ground").trim() || "#f3efe7");
+    }
+  }
+
+  btns.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var t = b.dataset.themeSet;
+      try { localStorage.setItem("theme", t); } catch (e) {}
+      apply(t);
+    });
+  });
+
+  // each accent ships with the ground set it was designed against
+  var GROUNDS = { amber:"softened", moss:"standard", oxblood:"standard",
+                  dusk:"softened", petrol:"standard", seaglass:"softened" };
+  var swatches = document.querySelectorAll("[data-accent-set]");
+
+  function applyAccent(a) {
+    if (!GROUNDS[a]) a = "amber";
+    root.dataset.accent = a;
+    root.dataset.grounds = GROUNDS[a];
+    swatches.forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.accentSet === a));
+    });
+    apply(root.dataset.theme || "light");   // grounds changed, so refresh theme-color
+  }
+
+  swatches.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var a = b.dataset.accentSet;
+      try { localStorage.setItem("accent", a); } catch (e) {}
+      applyAccent(a);
+    });
+  });
+
+  apply(root.dataset.theme || "light");
+  applyAccent(root.dataset.accent || "amber");
 })();
 </script>
 </Base>

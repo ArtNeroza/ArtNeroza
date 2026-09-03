@@ -7,6 +7,7 @@ import fontArchivo from "../fonts/archivo-latin-var.woff2?url";
 import fontSans from "../fonts/ibm-plex-sans-latin-var.woff2?url";
 import fontMono400 from "../fonts/ibm-plex-mono-latin-400.woff2?url";
 import fontMono500 from "../fonts/ibm-plex-mono-latin-500.woff2?url";
+import fontMono700 from "../fonts/ibm-plex-mono-latin-700.woff2?url";
 
 interface Props {
   title?: string;
@@ -22,7 +23,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL("og.png", Astro.site);
 
 const favicon =
-  "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23101219'/><text x='16' y='22' font-family='Georgia,serif' font-size='17' font-weight='700' fill='%23e8734a' text-anchor='middle'>A</text></svg>";
+  "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23181b21'/><text x='16' y='22' font-family='Georgia,serif' font-size='17' font-weight='700' fill='%23c0a469' text-anchor='middle'>A</text></svg>";
 
 const person = {
   "@context": "https://schema.org",
@@ -58,6 +59,17 @@ const person = {
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<!-- runs before paint, so the page never flashes the wrong theme -->
+<script is:inline>
+  var G = { amber:"softened", moss:"standard", oxblood:"standard",
+            dusk:"softened", petrol:"standard", seaglass:"softened" };
+  var d = document.documentElement.dataset;
+  try {
+    d.theme  = localStorage.getItem("theme") || "light";
+    d.accent = localStorage.getItem("accent") || "amber";
+  } catch (e) { d.theme = "light"; d.accent = "amber"; }
+  d.grounds = G[d.accent] || "softened";
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <meta name="description" content={description}>
@@ -80,13 +92,14 @@ const person = {
 <meta name="twitter:description" content={description}>
 <meta name="twitter:image" content={ogImage}>
 
-<meta name="theme-color" content="#101219">
+<meta name="theme-color" content="#f3efe7">
 
 <!-- every face is used above the fold; preloading removes the swap reflow -->
 <link rel="preload" href={fontArchivo} as="font" type="font/woff2" crossorigin>
 <link rel="preload" href={fontSans} as="font" type="font/woff2" crossorigin>
 <link rel="preload" href={fontMono400} as="font" type="font/woff2" crossorigin>
 <link rel="preload" href={fontMono500} as="font" type="font/woff2" crossorigin>
+<link rel="preload" href={fontMono700} as="font" type="font/woff2" crossorigin>
 <link rel="icon" href={favicon}>
 <script type="application/ld+json" set:html={JSON.stringify(person)} is:inline />
 <Analytics />
