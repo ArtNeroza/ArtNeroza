@@ -142,6 +142,33 @@ const LIMIT = 5;
     return el;
   }
 
+  /**
+   * Render model text with URLs and emails as real links.
+   * Built with DOM nodes rather than innerHTML on purpose: the answer comes
+   * from a model a visitor can steer, so it is never parsed as markup. Only
+   * http(s) and mailto are ever turned into an anchor.
+   */
+  function linkify(el, text) {
+    el.textContent = "";
+    var re = /(https?:\/\/[^\s<>()]+)|([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})/g;
+    var last = 0, m;
+    while ((m = re.exec(text)) !== null) {
+      if (m.index > last) el.appendChild(document.createTextNode(text.slice(last, m.index)));
+      var raw = m[0];
+      var trail = "";
+      // don't swallow sentence punctuation into the href
+      while (/[.,!?;:)\]]$/.test(raw)) { trail = raw.slice(-1) + trail; raw = raw.slice(0, -1); }
+      var a = document.createElement("a");
+      a.href = m[2] ? "mailto:" + raw : raw;
+      a.textContent = raw;
+      if (!m[2]) { a.target = "_blank"; a.rel = "noopener"; }
+      el.appendChild(a);
+      if (trail) el.appendChild(document.createTextNode(trail));
+      last = m.index + m[0].length;
+    }
+    if (last < text.length) el.appendChild(document.createTextNode(text.slice(last)));
+  }
+
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
     var q = input.value.trim();
@@ -166,7 +193,7 @@ const LIMIT = 5;
 
       if (!res.ok || !res.body) {
         // limit hit, offline, bad request — say which, and DON'T spend a message
-        out.textContent = await res.text();
+        linkify(out, await res.text());
         out.classList.add("is-note");
         if (res.status === 503) {
           // nothing more will succeed today — point at what still works
@@ -184,12 +211,11 @@ const LIMIT = 5;
       var reader = res.body.getReader();
       var dec = new TextDecoder();
       var acc = "";
-      out.textContent = "";
       while (true) {
         var chunk = await reader.read();
         if (chunk.done) break;
         acc += dec.decode(chunk.value, { stream: true });
-        out.textContent = acc;
+        linkify(out, acc);
       }
 
       history.push({ role: "user", content: q });
@@ -197,7 +223,7 @@ const LIMIT = 5;
       history = history.slice(-4);
       if (acc.trim()) spend();       // only a real answer costs a message
     } catch (err) {
-      out.textContent = "Kafra is offline right now — please email art.neroza@gmail.com.";
+      linkify(out, "Kafra is offline right now — please email art.neroza@gmail.com.");
       out.classList.add("is-note");
       paint();
     }
