@@ -29,6 +29,7 @@ Frontend: HTML, CSS, JavaScript, TypeScript, React, Next.js, Angular, Vue, Astro
 Backend: Node.js, Express, PHP, Laravel, GraphQL.
 Data and cloud: PostgreSQL, MongoDB, Supabase, AWS, Vercel.
 CMS and CRM: WordPress, Shopify, HubSpot.
+AI: Claude Code, ChatGPT, Gemini; builds generative-AI features into applications.
 
 Recent projects:
 ${recents.map((p) => `- ${p.name} (${p.year}): ${p.stack}`).join("\n")}
@@ -72,7 +73,8 @@ export const canned: QA[] = [
     a: `<p><b>Frontend</b> — HTML, CSS, JavaScript, TypeScript, React, Next.js, Angular, Vue, Astro</p>
         <p><b>Backend</b> — Node.js, Express, PHP, Laravel, GraphQL</p>
         <p><b>Data &amp; cloud</b> — PostgreSQL, MongoDB, Supabase, AWS, Vercel</p>
-        <p><b>CMS &amp; CRM</b> — WordPress, Shopify, HubSpot</p>`,
+        <p><b>CMS &amp; CRM</b> — WordPress, Shopify, HubSpot</p>
+        <p><b>AI</b> — Claude Code, ChatGPT, Gemini, generative AI</p>`,
   },
   {
     id: "hubspot",
