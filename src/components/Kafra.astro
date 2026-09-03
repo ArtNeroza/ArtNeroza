@@ -1,0 +1,208 @@
+---
+import { canned } from "../data/about";
+const LIMIT = 5;
+---
+<div class="kafra">
+  <button class="kafra-open" type="button" aria-expanded="false" aria-controls="kafra-panel">
+    Talk to NPC Kafra
+  </button>
+
+  <div class="kafra-panel" id="kafra-panel" hidden data-limit={LIMIT}>
+    <p class="kafra-greet">
+      Welcome to the Kafra Corporation! Pick a question, or ask your own.
+    </p>
+
+    <div class="kafra-chips" role="group" aria-label="Suggested questions">
+      {canned.map((qa) => (
+        <button class="chip" type="button" data-a={`a-${qa.id}`}>{qa.q}</button>
+      ))}
+    </div>
+
+    <!-- Result area. Canned answers ship in the HTML: instant, free, crawlable. -->
+    <div class="kafra-out" aria-live="polite">
+      <p class="kafra-idle">Choose a question above, or type your own below.</p>
+      {canned.map((qa) => (
+        <div class="kafra-answer" id={`a-${qa.id}`} hidden set:html={qa.a} />
+      ))}
+      <div class="kafra-thread" hidden></div>
+    </div>
+
+    <form class="kafra-form">
+      <input class="kafra-input" type="text" maxlength="300" autocomplete="off"
+             placeholder="Ask about Art&rsquo;s work…" aria-label="Ask a question about Art" />
+      <button class="kafra-send" type="submit" aria-label="Send question">&rarr;</button>
+    </form>
+
+    <p class="kafra-meta">
+      <span class="kafra-left">{LIMIT}</span> free questions left ·
+      <a href="mailto:art.neroza@gmail.com">email Art instead</a><span class="kafra-quota"></span>
+    </p>
+
+    <p class="kafra-meta kafra-dry" hidden>
+      Daily quota dried up — use the free questions above, or
+      <a href="mailto:art.neroza@gmail.com">email Art</a>.
+    </p>
+  </div>
+</div>
+
+<script is:inline>
+(function () {
+  var open = document.querySelector(".kafra-open");
+  var panel = document.getElementById("kafra-panel");
+  if (!open || !panel) return;
+
+  var idle    = panel.querySelector(".kafra-idle");
+  var thread  = panel.querySelector(".kafra-thread");
+  var form    = panel.querySelector(".kafra-form");
+  var input   = panel.querySelector(".kafra-input");
+  var send    = panel.querySelector(".kafra-send");
+  var leftEl  = panel.querySelector(".kafra-left");
+  var metaEl  = panel.querySelector(".kafra-meta:not(.kafra-dry)");
+  var dryEl   = panel.querySelector(".kafra-dry");
+  var answers = panel.querySelectorAll(".kafra-answer");
+  var chips   = panel.querySelectorAll(".chip");
+
+  var LIMIT = Number(panel.dataset.limit || 2);
+  var KEY = "kafra.used";
+  var history = [];
+
+  /* ---- quota: per browser, per day ------------------------------- */
+  // local dev shouldn't burn the allowance while you're testing
+  var DEV = ["localhost", "127.0.0.1"].indexOf(location.hostname) > -1;
+  function today() { return Math.floor(Date.now() / 86400000); }
+  function used() {
+    if (DEV) return 0;
+    try {
+      var r = JSON.parse(localStorage.getItem(KEY) || "{}");
+      return r.day === today() ? r.n || 0 : 0;
+    } catch (e) { return 0; }
+  }
+  function spend() {
+    try { localStorage.setItem(KEY, JSON.stringify({ day: today(), n: used() + 1 })); } catch (e) {}
+    paint();
+  }
+  function left() { return Math.max(0, LIMIT - used()); }
+  var quotaEl = panel.querySelector(".kafra-quota");
+  function paint() {
+    if (DEV) {
+      // local dev has no per-visitor limit; say so instead of showing a
+      // counter that never moves
+      if (leftEl) leftEl.textContent = "∞";
+      input.disabled = send.disabled = false;
+      input.placeholder = "Ask about Art’s work…  (dev: no limit)";
+      return;
+    }
+    var n = left();
+    if (leftEl) leftEl.textContent = String(n);
+    input.disabled = send.disabled = n <= 0;
+    input.placeholder = n > 0
+      ? "Ask about Art’s work…"
+      : "That’s your questions for today — email Art below.";
+  }
+
+  function showQuota(res) {
+    var l = res.headers.get("x-kafra-quota-left");
+    var t = res.headers.get("x-kafra-quota-total");
+    if (quotaEl && l !== null) quotaEl.textContent = " · ~" + l + "/" + t + " model calls left today";
+  }
+
+  /* ---- panel ------------------------------------------------------ */
+  open.addEventListener("click", function () {
+    if (open.getAttribute("aria-expanded") === "true") {
+      panel.classList.remove("is-open");
+      open.setAttribute("aria-expanded", "false");
+      setTimeout(function () { panel.hidden = true; }, 260);
+    } else {
+      panel.hidden = false;
+      requestAnimationFrame(function () {
+        panel.classList.add("is-open");
+        open.setAttribute("aria-expanded", "true");
+      });
+    }
+  });
+
+  function showCanned(id) {
+    if (idle) idle.hidden = true;
+    thread.hidden = true;
+    answers.forEach(function (a) { a.hidden = a.id !== id; });
+  }
+  chips.forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      showCanned(chip.dataset.a);
+      chips.forEach(function (c) { c.setAttribute("aria-pressed", String(c === chip)); });
+    });
+  });
+
+  /* ---- free-form -------------------------------------------------- */
+  function bubble(cls, text) {
+    var el = document.createElement("p");
+    el.className = cls;
+    el.textContent = text;
+    thread.appendChild(el);
+    return el;
+  }
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var q = input.value.trim();
+    if (!q || left() <= 0) return;
+
+    if (idle) idle.hidden = true;
+    answers.forEach(function (a) { a.hidden = true; });
+    chips.forEach(function (c) { c.setAttribute("aria-pressed", "false"); });
+    thread.hidden = false;
+
+    bubble("kafra-q", q);
+    var out = bubble("kafra-a", "…");
+    input.value = "";
+    input.disabled = send.disabled = true;
+
+    try {
+      var res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ question: q, history: history }),
+      });
+
+      if (!res.ok || !res.body) {
+        // limit hit, offline, bad request — say which, and DON'T spend a message
+        out.textContent = await res.text();
+        out.classList.add("is-note");
+        if (res.status === 503) {
+          // nothing more will succeed today — point at what still works
+          input.disabled = send.disabled = true;
+          input.placeholder = "Daily quota dried up.";
+          if (metaEl) metaEl.hidden = true;
+          if (dryEl) dryEl.hidden = false;
+        } else {
+          paint();
+        }
+        return;
+      }
+
+      showQuota(res);
+      var reader = res.body.getReader();
+      var dec = new TextDecoder();
+      var acc = "";
+      out.textContent = "";
+      while (true) {
+        var chunk = await reader.read();
+        if (chunk.done) break;
+        acc += dec.decode(chunk.value, { stream: true });
+        out.textContent = acc;
+      }
+
+      history.push({ role: "user", content: q });
+      history.push({ role: "assistant", content: acc });
+      history = history.slice(-4);
+      if (acc.trim()) spend();       // only a real answer costs a message
+    } catch (err) {
+      out.textContent = "Kafra is offline right now — please email art.neroza@gmail.com.";
+      out.classList.add("is-note");
+      paint();
+    }
+  });
+
+  paint();
+})();
+</script>

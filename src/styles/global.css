@@ -170,6 +170,136 @@ h1 .mid{color:var(--ink-mid);font-weight:600;}
 }
 .blurb strong{color:var(--ink);font-weight:500;}
 
+/* ---- NPC Kafra --------------------------------------------- */
+.kafra{margin-top:1.1rem;}
+
+.kafra-open{
+  padding:0;
+  border:0;
+  background:none;
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.75rem;
+  letter-spacing:.08em;
+  color:var(--accent);
+  cursor:pointer;
+  border-bottom:1px dashed currentColor;
+  transition:color .2s var(--ease);
+}
+.kafra-open:hover{color:var(--accent-soft);}
+.kafra-open:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px;}
+.kafra-open::after{content:" ›";}
+.kafra-open[aria-expanded="true"]::after{content:" ‹";}
+
+/* slides in from the left, settling to the right into place */
+.kafra-panel{
+  margin-top:.85rem;
+  padding:.95rem 1.05rem 1.05rem;
+  border:1px solid var(--line);
+  border-left:2px solid var(--accent);
+  border-radius:.55rem;
+  background:var(--surface);
+  opacity:0;
+  transform:translateX(-18px);
+  transition:opacity .26s var(--ease), transform .26s var(--ease);
+}
+.kafra-panel.is-open{opacity:1;transform:none;}
+
+.kafra-greet{
+  margin:0 0 .8rem;
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.7rem;
+  letter-spacing:.02em;
+  color:var(--ink-dim);
+}
+
+.kafra-chips{display:flex;flex-wrap:wrap;gap:.4rem;}
+.chip{
+  padding:.4rem .7rem;
+  border:1px solid var(--line-hi);
+  border-radius:2rem;
+  background:transparent;
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.7rem;
+  color:var(--ink-mid);
+  cursor:pointer;
+  transition:color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+}
+.chip:hover{color:var(--ink);border-color:var(--accent);background:var(--surface-hi);}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.chip[aria-pressed="true"]{color:var(--accent);border-color:var(--accent);}
+
+/* the result area */
+.kafra-out{
+  margin-top:.85rem;
+  padding-top:.8rem;
+  border-top:1px solid var(--line);
+  font-size:.8rem;
+  color:var(--ink-mid);
+  min-height:4.2rem;
+}
+.kafra-out p{margin:0 0 .5rem;}
+.kafra-out p:last-child{margin-bottom:0;}
+.kafra-out ul{margin:.1rem 0 .6rem;padding-left:1.1rem;}
+.kafra-out li{margin:.15rem 0;}
+.kafra-out b{color:var(--ink);font-weight:500;}
+.kafra-out a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;}
+.kafra-out a:hover{border-bottom-color:currentColor;}
+.kafra-idle{color:var(--ink-dim);}
+.kafra-answer{animation:kafraIn .24s var(--ease) both;}
+@keyframes kafraIn{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:none;}}
+
+/* ---- Kafra: ask form ---------------------------------------- */
+.kafra-form{display:flex;gap:.4rem;margin-top:.85rem;}
+.kafra-input{
+  flex:1 1 auto;
+  min-width:0;
+  padding:.5rem .7rem;
+  border:1px solid var(--line-hi);
+  border-radius:.45rem;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.72rem;
+}
+.kafra-input::placeholder{color:var(--ink-dim);}
+.kafra-input:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent);}
+.kafra-input:disabled{opacity:.55;}
+.kafra-send{
+  flex:none;
+  width:2.1rem;
+  border:1px solid var(--line-hi);
+  border-radius:.45rem;
+  background:var(--surface-hi);
+  color:var(--accent);
+  cursor:pointer;
+  transition:border-color .2s var(--ease), background .2s var(--ease);
+}
+.kafra-send:hover:not(:disabled){border-color:var(--accent);background:var(--surface);}
+.kafra-send:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.kafra-send:disabled{opacity:.4;cursor:default;}
+
+.kafra-meta{
+  margin:.55rem 0 0;
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.66rem;
+  color:var(--ink-dim);
+}
+.kafra-meta a{color:var(--accent);text-decoration:none;}
+.kafra-meta a:hover{text-decoration:underline;}
+.kafra-left{color:var(--accent);}
+.kafra-dry{color:var(--ink-mid);}
+.kafra-quota{color:var(--ink-dim);}
+
+.kafra-q{
+  margin:0 0 .35rem;
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.72rem;
+  color:var(--ink);
+}
+.kafra-q::before{content:"› ";color:var(--accent);}
+.kafra-a{margin:0 0 .8rem;color:var(--ink-mid);}
+.kafra-a.is-note{color:var(--ink-dim);font-style:italic;}
+
 /* ---- project grid ------------------------------------------ */
 .work{
   display:grid;
@@ -440,5 +570,7 @@ h1 .mid{color:var(--ink-mid);font-weight:600;}
   .dot::after{display:none;}
   .caret{display:none;}
   .cup .steam path{opacity:.8;transform:none;}
+  .kafra-panel{transform:none;}
+  .kafra-answer{animation:none;}
   .dot{box-shadow:0 0 0 3px rgba(67,201,139,.18), 0 0 6px rgba(67,201,139,.5);}
 }
