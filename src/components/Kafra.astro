@@ -151,6 +151,20 @@ const LIMIT = 5;
   });
 
   /* ---- free-form -------------------------------------------------- */
+  /** Animated waiting state, so a slow answer never looks like a hang. */
+  function thinking(el) {
+    el.textContent = "";
+    var sr = document.createElement("span");
+    sr.className = "sr-only";
+    sr.textContent = "Thinking…";          // announced once, not the dots
+    el.appendChild(sr);
+    var wrap = document.createElement("span");
+    wrap.className = "kafra-wait";
+    wrap.setAttribute("aria-hidden", "true");
+    for (var i = 0; i < 3; i++) wrap.appendChild(document.createElement("i"));
+    el.appendChild(wrap);
+  }
+
   function bubble(cls, text) {
     var el = document.createElement("p");
     el.className = cls;
@@ -197,7 +211,8 @@ const LIMIT = 5;
     thread.hidden = false;
 
     bubble("kafra-q", q);
-    var out = bubble("kafra-a", "…");
+    var out = bubble("kafra-a", "");
+    thinking(out);
     input.value = "";
     input.disabled = send.disabled = true;
 
