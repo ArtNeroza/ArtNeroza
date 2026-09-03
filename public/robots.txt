@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+# resume carries a phone number — keep it out of search results
+Disallow: /art-neroza-resume.pdf
+
 Sitemap: https://artneroza.com/sitemap-index.xml
