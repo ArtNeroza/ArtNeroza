@@ -50,5 +50,5 @@ Building scalable web applications from reusable components - from La&nbsp;Union
 
 ---
 
-**If you have an idea to bring to life, let's talk about it over coffee! <img src="assets/coffee.svg" width="20" alt="" align="top" />
-[artneroza@gmail.com](mailto:artneroza@gmail.com)**
+<h5>If you have an idea to bring to life, let's talk about it over coffee! <img src="assets/coffee.svg" width="20" alt="" align="top" />
+<a href="mailto:artneroza@gmail.com">artneroza@gmail.com</a></h5>
