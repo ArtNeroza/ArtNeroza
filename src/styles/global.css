@@ -153,7 +153,7 @@
 
   --step-0:.875rem;
   --step-1:1rem;
-  --step-2:clamp(.75rem,.68rem + .36vw,.89rem);
+  --step-2:clamp(.86rem,.79rem + .36vw,1rem);
   --display:clamp(2.6rem,1.4rem + 5.4vw,5.25rem);
 
   --col:min(100% - 2.5rem, 46rem);
@@ -262,9 +262,9 @@ h1 .mid{color:var(--name-2);font-weight:600;}
   border:0;
   background:none;
   font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-  font-size:.75rem;
+  font-size:1rem;
   font-weight:700;
-  letter-spacing:.08em;
+  letter-spacing:.06em;
   color:var(--accent);
   cursor:pointer;
   border-bottom:1px dashed var(--accent-dash);
@@ -277,6 +277,7 @@ h1 .mid{color:var(--name-2);font-weight:600;}
 
 /* slides in from the left, settling to the right into place */
 .kafra-panel{
+  position:relative;
   margin-top:.85rem;
   padding:.95rem 1.05rem 1.05rem;
   border:1px solid var(--line);
@@ -289,8 +290,28 @@ h1 .mid{color:var(--name-2);font-weight:600;}
 }
 .kafra-panel.is-open{opacity:1;transform:none;}
 
+.kafra-close{
+  position:absolute;
+  top:.55rem;
+  right:.55rem;
+  display:grid;
+  place-items:center;
+  width:1.7rem;
+  height:1.7rem;
+  padding:0;
+  border:1px solid var(--line);
+  border-radius:.4rem;
+  background:transparent;
+  color:var(--ink-dim);
+  cursor:pointer;
+  transition:color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+}
+.kafra-close:hover{color:var(--accent);border-color:var(--accent);background:var(--surface-hi);}
+.kafra-close:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.kafra-close svg{width:.85rem;height:.85rem;display:block;}
+
 .kafra-greet{
-  margin:0 0 .8rem;
+  margin:0 2.2rem .8rem 0;
   font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   font-size:.7rem;
   letter-spacing:.02em;
@@ -318,7 +339,7 @@ h1 .mid{color:var(--name-2);font-weight:600;}
   margin-top:.85rem;
   padding-top:.8rem;
   border-top:1px solid var(--line);
-  font-size:.8rem;
+  font-size:.9rem;
   color:var(--ink-mid);
   min-height:4.2rem;
 }
@@ -378,7 +399,7 @@ h1 .mid{color:var(--name-2);font-weight:600;}
 .kafra-q{
   margin:0 0 .35rem;
   font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-  font-size:.72rem;
+  font-size:.82rem;
   color:var(--ink);
 }
 .kafra-q::before{content:"› ";color:var(--accent);}
@@ -519,7 +540,7 @@ h1 .mid{color:var(--name-2);font-weight:600;}
   display:flex;
   flex-wrap:wrap;
   align-items:center;
-  justify-content:space-between;
+  justify-content:center;
   gap:1rem 1.5rem;
   padding-top:1.5rem;
   border-top:1px solid var(--line);
@@ -548,7 +569,7 @@ h1 .mid{color:var(--name-2);font-weight:600;}
   flex-wrap:wrap;
   gap:.5rem;
   font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-  font-size:.72rem;
+  font-size:.82rem;
   letter-spacing:.02em;
   color:var(--ink-dim);
 }
@@ -691,7 +712,8 @@ h1 .mid{color:var(--name-2);font-weight:600;}
   .blurb{margin-top:.9rem;}
   .card{padding:.85rem 1rem .9rem;}
   /* Lighthouse flags text under 12px as illegible on small screens */
-  .eyebrow,.status{font-size:.75rem;}
+  .eyebrow{font-size:.75rem;}
+  .status{font-size:.82rem;}
   .card .stack{font-size:.75rem;}
   .label{font-size:.75rem;}
 

@@ -8,6 +8,10 @@ const LIMIT = 5;
   </button>
 
   <div class="kafra-panel" id="kafra-panel" hidden data-limit={LIMIT}>
+    <button class="kafra-close" type="button" aria-label="Close Kafra Copilot">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+
     <p class="kafra-greet">
       Welcome to the Kafra Corporation! Pick a question, or ask your own.
     </p>
@@ -107,18 +111,31 @@ const LIMIT = 5;
   }
 
   /* ---- panel ------------------------------------------------------ */
-  open.addEventListener("click", function () {
-    if (open.getAttribute("aria-expanded") === "true") {
-      panel.classList.remove("is-open");
-      open.setAttribute("aria-expanded", "false");
-      setTimeout(function () { panel.hidden = true; }, 260);
-    } else {
-      panel.hidden = false;
-      requestAnimationFrame(function () {
-        panel.classList.add("is-open");
-        open.setAttribute("aria-expanded", "true");
-      });
-    }
+  var closeBtn = panel.querySelector(".kafra-close");
+
+  function isOpen() { return open.getAttribute("aria-expanded") === "true"; }
+
+  function closePanel(returnFocus) {
+    panel.classList.remove("is-open");
+    open.setAttribute("aria-expanded", "false");
+    setTimeout(function () { panel.hidden = true; }, 260);
+    if (returnFocus) open.focus();
+  }
+
+  function openPanel() {
+    panel.hidden = false;
+    requestAnimationFrame(function () {
+      panel.classList.add("is-open");
+      open.setAttribute("aria-expanded", "true");
+    });
+  }
+
+  open.addEventListener("click", function () { isOpen() ? closePanel(false) : openPanel(); });
+  if (closeBtn) closeBtn.addEventListener("click", function () { closePanel(true); });
+
+  // Escape is what most people reach for once a panel is open
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && isOpen()) closePanel(true);
   });
 
   function showCanned(id) {
