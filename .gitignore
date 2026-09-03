@@ -2,6 +2,7 @@ node_modules/
 dist/
 .astro/
 .vercel/
-.env
-.env.production
+# every env variant (.env.local, .env.development, .env*.local …)
+.env*
+!.env.example
 .DS_Store
