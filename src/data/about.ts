@@ -32,7 +32,7 @@ CMS and CRM: WordPress, Shopify, HubSpot.
 AI: Claude Code, ChatGPT, Gemini; builds generative-AI features into applications.
 
 Recent projects:
-${recents.map((p) => `- ${p.name} (${p.year}): ${p.stack}`).join("\n")}
+${recents.map((p) => `- ${p.name}${p.year ? ` (${p.year})` : ""}: ${p.stack}`).join("\n")}
 
 Areas he builds in:
 ${featured.map((p) => `- ${p.name}: ${p.stack}`).join("\n")}

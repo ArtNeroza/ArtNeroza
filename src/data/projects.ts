@@ -18,6 +18,7 @@ export const featured: Project[] = [
 /** The "Recents" rail. Add an entry here and it appears in the carousel. */
 // TODO: confirm these years — placeholders, not verified dates.
 export const recents: Project[] = [
+  { name: "AFFC App Site",        stack: "Nextjs · SaaS-ready app", url: "https://affc-appsite.vercel.app/", year: "2026"  },
   { name: "David Willards Group", stack: "Custom WP · REST API · Listings",    url: "https://davidwillardsgroup.com/",     year: "2026" },
   { name: "Eternal Homes Portal", stack: "Next.js · Express.js · HubSpot API", url: "https://portal.eternalhomes.com.au/", year: "2026" },
   { name: "Eternal Homes",        stack: "Custom WP · Gutenberg",              url: "https://eternalhomes.com.au/",        year: "2025" },
