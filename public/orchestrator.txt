@@ -1,0 +1,21 @@
+                 CLAUDE.md
+              Global Orchestrator
+                     │
+              Project Triage
+                     │
+          ┌──────────┼──────────┐
+          ↓          ↓          ↓
+      WordPress    Next.js    NestJS
+          │          │          │
+      WP Skills   React       API
+      WP Strategy Frontend    Backend
+          │          │          │
+          └──────────┼──────────┘
+                     ↓
+             Shared Skills
+          Testing / Security /
+          Design / Delivery
+                     ↓
+               QA + Verify
+                     ↓
+                  Client

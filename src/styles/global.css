@@ -420,6 +420,21 @@ h1 .mid{color:var(--name-2);font-weight:600;}
   36%        {opacity:1;transform:translateY(-.14em);}
 }
 
+.kafra-art{
+  margin:.5rem 0 0;
+  padding:.7rem .8rem;
+  border:1px solid var(--line);
+  border-left:2px solid var(--accent);
+  border-radius:.4rem;
+  background:var(--ground);
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.62rem;
+  line-height:1.35;
+  color:var(--ink-mid);
+  white-space:pre;
+  overflow-x:auto;
+}
+
 .kafra-a.is-note{color:var(--ink-dim);font-style:italic;}
 .kafra-a a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-dash);}
 .kafra-a a:hover{border-bottom-color:currentColor;}
