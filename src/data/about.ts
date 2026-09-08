@@ -70,11 +70,11 @@ export const canned: QA[] = [
   {
     id: "stack",
     q: "What's his tech stack?",
-    a: `<p><b>Frontend</b> — HTML, CSS, JavaScript, TypeScript, React, Next.js, Angular, Vue, Astro</p>
-        <p><b>Backend</b> — Node.js, Express, PHP, Laravel, GraphQL</p>
+    a: `<p><b>Frontend</b> — HTML, CSS, JavaScript, TypeScript, React, Next.js, Vite, Angular, Vue, Astro</p>
+        <p><b>Backend</b> — Node.js, Express.js, Nest.js, PHP, Laravel, GraphQL</p>
         <p><b>Data &amp; cloud</b> — PostgreSQL, MongoDB, Supabase, AWS, Vercel</p>
         <p><b>CMS &amp; CRM</b> — WordPress, Shopify, HubSpot</p>
-        <p><b>AI</b> — Claude Code, ChatGPT, Gemini, generative AI</p>`,
+        <p><b>AI</b> — Claude Code, ChatGPT, Gemini, Generative AI</p>`,
   },
   {
     id: "hubspot",
