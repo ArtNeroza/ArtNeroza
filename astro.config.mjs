@@ -12,6 +12,19 @@ export default defineConfig({
   // (currently just /api/chat) become serverless functions.
   adapter: vercel(),
 
+  // Emits a per-page CSP with a sha256 for every inline script, so the
+  // effective script-src is a hash allowlist. The header in vercel.json still
+  // carries 'unsafe-inline' because these hashes change every build and can't
+  // be hardcoded there — but two policies both have to allow a script, so the
+  // intersection is hashes only. The header is what carries frame-ancestors,
+  // which a meta policy is not allowed to set.
+  experimental: {
+    csp: {
+      directives: ["default-src 'none'", "img-src 'self' data:", "font-src 'self'", "connect-src 'self'", "base-uri 'none'", "form-action 'none'"],
+      styleDirective: { resources: ["'self'", "'unsafe-inline'"] },
+    },
+  },
+
   build: {
     // the whole stylesheet is ~7 KB; one inlined request beats a
     // render-blocking round trip for a single-page site

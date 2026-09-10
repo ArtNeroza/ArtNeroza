@@ -19,11 +19,17 @@ export const MAX_ANSWER_TOKENS = 1200;
 
 /**
  * Vercel injects real env vars into process.env at runtime; a local .env is
- * loaded by Vite into import.meta.env instead. Check runtime first so the
- * production value is never baked into the build.
+ * loaded by Vite into import.meta.env instead.
+ *
+ * The import.meta.env read is deliberately behind `import.meta.env.DEV`. Vite
+ * replaces both with literals at build time, so in a production build the
+ * condition folds to `false` and the whole branch — key included — is dropped
+ * from the bundle. Reading it unconditionally would inline whatever key sat in
+ * the local .env into the deployed artifact.
  */
 function apiKey(): string | undefined {
-  return process.env.GEMINI_API_KEY ?? import.meta.env.GEMINI_API_KEY;
+  if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
+  return import.meta.env.DEV ? import.meta.env.GEMINI_API_KEY : undefined;
 }
 
 export function isConfigured() {

@@ -67,6 +67,7 @@ const LIMIT = 5;
   var chips   = panel.querySelectorAll(".chip");
 
   var LIMIT = Number(panel.dataset.limit || 2);
+  var RS = "";              // separates the answer from its signature
   var KEY = "kafra.used";
   var history = [];
 
@@ -198,10 +199,37 @@ const LIMIT = 5;
   }
 
   /**
+   * Hosts a link may point at. The answer comes from a model a visitor can
+   * steer, so a jailbroken reply could otherwise put an attacker's URL on
+   * Art's own domain as a live link. Anything not on this list still renders —
+   * as plain text, not an anchor.
+   */
+  var LINK_HOSTS = [
+    "artneroza.com", "www.artneroza.com",
+    "github.com", "www.github.com",
+    "linkedin.com", "www.linkedin.com",
+    "affc-appsite.vercel.app",
+    "davidwillardsgroup.com", "www.davidwillardsgroup.com",
+    "eternalhomes.com.au", "www.eternalhomes.com.au", "portal.eternalhomes.com.au",
+  ];
+
+  /** Only Art's own address is ever a mailto. */
+  var MAIL_OK = "art.neroza@gmail.com";
+
+  function allowedUrl(raw) {
+    try {
+      var u = new URL(raw);
+      if (u.protocol !== "https:" && u.protocol !== "http:") return false;
+      return LINK_HOSTS.indexOf(u.hostname.toLowerCase()) > -1;
+    } catch (e) { return false; }
+  }
+
+  /**
    * Render model text with URLs and emails as real links.
    * Built with DOM nodes rather than innerHTML on purpose: the answer comes
    * from a model a visitor can steer, so it is never parsed as markup. Only
-   * http(s) and mailto are ever turned into an anchor.
+   * http(s) and mailto are ever turned into an anchor, and only for the hosts
+   * and address above.
    */
   function linkify(el, text) {
     el.textContent = "";
@@ -213,11 +241,16 @@ const LIMIT = 5;
       var trail = "";
       // don't swallow sentence punctuation into the href
       while (/[.,!?;:)\]]$/.test(raw)) { trail = raw.slice(-1) + trail; raw = raw.slice(0, -1); }
-      var a = document.createElement("a");
-      a.href = m[2] ? "mailto:" + raw : raw;
-      a.textContent = raw;
-      if (!m[2]) { a.target = "_blank"; a.rel = "noopener"; }
-      el.appendChild(a);
+      var ok = m[2] ? raw.toLowerCase() === MAIL_OK : allowedUrl(raw);
+      if (ok) {
+        var a = document.createElement("a");
+        a.href = m[2] ? "mailto:" + raw : raw;
+        a.textContent = raw;
+        if (!m[2]) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
+        el.appendChild(a);
+      } else {
+        el.appendChild(document.createTextNode(raw));   // shown, never clickable
+      }
       if (trail) el.appendChild(document.createTextNode(trail));
       last = m.index + m[0].length;
     }
@@ -277,13 +310,20 @@ const LIMIT = 5;
         var chunk = await reader.read();
         if (chunk.done) break;
         acc += dec.decode(chunk.value, { stream: true });
-        linkify(out, acc);
+        linkify(out, acc.split(RS)[0]);   // never render the trailer
       }
 
+      // The answer arrives with a signature after a record-separator byte. It
+      // goes back with the turn so the server will trust this as something it
+      // actually said, rather than something the page made up.
+      var parts = acc.split(RS);
+      var answer = parts[0];
+      linkify(out, answer);
+
       history.push({ role: "user", content: q });
-      history.push({ role: "assistant", content: acc });
+      history.push({ role: "assistant", content: answer, sig: parts[1] || "" });
       history = history.slice(-4);
-      if (acc.trim()) spend();       // only a real answer costs a message
+      if (answer.trim()) spend();    // only a real answer costs a message
     } catch (err) {
       linkify(out, "Kafra is offline right now — please email art.neroza@gmail.com.");
       out.classList.add("is-note");
