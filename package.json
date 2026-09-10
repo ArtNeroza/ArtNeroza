@@ -14,5 +14,10 @@
     "@google/genai": "^2.21.0",
     "@vercel/analytics": "^2.0.1",
     "astro": "^5.18.2"
+  },
+  "overrides": {
+    "path-to-regexp": "^6.3.0",
+    "sharp": "^0.35.4",
+    "esbuild": "^0.28.2"
   }
 }
