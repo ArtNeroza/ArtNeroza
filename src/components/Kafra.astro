@@ -39,12 +39,12 @@ const LIMIT = 5;
 
     <p class="kafra-meta">
       <span class="kafra-left">{LIMIT}</span> free questions left ·
-      <a href="mailto:art.neroza@gmail.com">email Art instead</a><span class="kafra-quota"></span>
+      <a href="mailto:me@artneroza.com">email Art instead</a><span class="kafra-quota"></span>
     </p>
 
     <p class="kafra-meta kafra-dry" hidden>
       Daily quota dried up — use the free questions above, or
-      <a href="mailto:art.neroza@gmail.com">email Art</a>.
+      <a href="mailto:me@artneroza.com">email Art</a>.
     </p>
   </div>
 </div>
@@ -214,7 +214,7 @@ const LIMIT = 5;
   ];
 
   /** Only Art's own address is ever a mailto. */
-  var MAIL_OK = "art.neroza@gmail.com";
+  var MAIL_OK = "me@artneroza.com";
 
   function allowedUrl(raw) {
     try {
@@ -325,7 +325,7 @@ const LIMIT = 5;
       history = history.slice(-4);
       if (answer.trim()) spend();    // only a real answer costs a message
     } catch (err) {
-      linkify(out, "Kafra is offline right now — please email art.neroza@gmail.com.");
+      linkify(out, "Kafra is offline right now — please email me@artneroza.com.");
       out.classList.add("is-note");
       paint();
     }

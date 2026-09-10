@@ -16,7 +16,7 @@ Name: Art C. Neroza. Goes by Art.
 Role: Full-Stack Developer and HubSpot Administrator.
 Based: La Union, Philippines. Timezone GMT+8. Works remotely with teams globally.
 Availability: open to contract, gig and full-time remote work.
-Contact: art.neroza@gmail.com. Also on LinkedIn (art-neroza) and GitHub (ArtNeroza).
+Contact: me@artneroza.com. Also on LinkedIn (art-neroza) and GitHub (ArtNeroza).
 Website: artneroza.com
 Resume: downloadable at https://artneroza.com/art-neroza-resume.pdf
 
@@ -89,12 +89,12 @@ export const canned: QA[] = [
     q: "Can I see his resume?",
     a: `<p>Yes — <a href="/art-neroza-resume.pdf" target="_blank" rel="noopener">download Art&rsquo;s resume (PDF)</a>.</p>
         <p>If you need it in another format, email
-        <a href="mailto:art.neroza@gmail.com">art.neroza@gmail.com</a>.</p>`,
+        <a href="mailto:me@artneroza.com">me@artneroza.com</a>.</p>`,
   },
   {
     id: "contact",
     q: "How can I reach him?",
-    a: `<p>Email <a href="mailto:art.neroza@gmail.com">art.neroza@gmail.com</a> — that reaches
+    a: `<p>Email <a href="mailto:me@artneroza.com">me@artneroza.com</a> — that reaches
         him fastest. He's also on
         <a href="https://www.linkedin.com/in/art-neroza/" target="_blank" rel="noopener">LinkedIn</a>
         and <a href="https://github.com/ArtNeroza" target="_blank" rel="noopener">GitHub</a>.</p>

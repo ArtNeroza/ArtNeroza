@@ -2,7 +2,7 @@
 <a href="https://www.linkedin.com/in/art-neroza/">
     <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logoColor=white" alt="LinkedIn" />
   </a>
-  <a href="mailto:art.neroza@gmail.com">
+  <a href="mailto:me@artneroza.com">
     <img src="https://img.shields.io/badge/Email-E8734A?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
   </a>
   <a href="https://artneroza.com">
@@ -55,4 +55,4 @@ Building scalable web applications from reusable components - from La&nbsp;Union
 ---
 
 <h5>If you have an idea to bring to life, let's talk about it over coffee! <img src="assets/coffee.svg" width="20" alt="" align="top" />
-<a href="mailto:art.neroza@gmail.com">art.neroza@gmail.com</a></h5>
+<a href="mailto:me@artneroza.com">me@artneroza.com</a></h5>

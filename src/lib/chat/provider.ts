@@ -100,7 +100,7 @@ export async function askModel(history: Turn[], question: string): Promise<Reada
       if (!sent) {
         console.error("[kafra] empty answer, finishReason:", finish);
         controller.enqueue(enc.encode(
-          "I don't have a good answer for that one - email art.neroza@gmail.com and Art can tell you directly."
+          "I don't have a good answer for that one - email me@artneroza.com and Art can tell you directly."
         ));
       }
       controller.close();

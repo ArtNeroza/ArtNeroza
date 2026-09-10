@@ -58,7 +58,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const DEV = process.env.NODE_ENV !== "production";
 
   if (!isConfigured()) {
-    return text("Kafra is offline right now — please email art.neroza@gmail.com.", 503);
+    return text("Kafra is offline right now — please email me@artneroza.com.", 503);
   }
   if (!DEV && !sameOrigin(request)) {
     return text("Bad request.", 403);
@@ -87,9 +87,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
   if (!claim.ok) {
     if (claim.reason === "daily") {
-      return text("That's all for today, please email art.neroza@gmail.com for more information", 503);
+      return text("That's all for today, please email me@artneroza.com for more information", 503);
     }
-    return text("That's all my questions for today — please email art.neroza@gmail.com.", 429);
+    return text("That's all my questions for today — please email me@artneroza.com.", 429);
   }
 
   let stream: ReadableStream<Uint8Array>;
@@ -99,12 +99,12 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     if (!DEV) await refund(ip);
     console.error("[kafra]", err);
     if (err?.kafraDaily) {
-      return text("That's all for today, please email art.neroza@gmail.com for more information", 503);
+      return text("That's all for today, please email me@artneroza.com for more information", 503);
     }
     if (err?.kafraBusy) {
       return text("Coffee break! Too many at once - grab a coffee and try again", 503);
     }
-    return text("Kafra is offline right now — please email art.neroza@gmail.com.", 502);
+    return text("Kafra is offline right now — please email me@artneroza.com.", 502);
   }
 
   // Sign the answer on its way out so the client can hand it back as history
