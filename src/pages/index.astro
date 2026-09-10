@@ -13,9 +13,12 @@ import { featured } from "../data/projects";
       <h1>Art C.&nbsp;<span class="mid">Neroza</span></h1>
       <p class="eyebrow" id="tagline">Full-Stack Developer &middot; HubSpot Administrator</p>
       <p class="blurb">
-        I build scalable web applications from reusable components across the whole stack &mdash;
-        <strong>Node.js</strong>, <strong>Nest.js</strong>, <strong>React.js</strong>, <strong>Next.js</strong>, <strong>Vite.js</strong>
-        <strong>Supabase</strong>, <strong>WordPress</strong>, <strong>PHP</strong>, <strong>Laravel</strong>, <strong>Angular</strong> and <strong>HubSpot</strong>
+        {/* astro 7 trims the newline between a text node and the next element,
+            where astro 5 collapsed it to a space — so the spaces that matter at
+            these three line breaks are written out rather than implied. */}
+        I build scalable web applications from reusable components across the whole stack &mdash;{" "}
+        <strong>Node.js</strong>, <strong>Nest.js</strong>, <strong>React.js</strong>, <strong>Next.js</strong>, <strong>Vite.js</strong>{" "}
+        <strong>Supabase</strong>, <strong>WordPress</strong>, <strong>PHP</strong>, <strong>Laravel</strong>, <strong>Angular</strong> and <strong>HubSpot</strong>{" "}
         &mdash; from La&nbsp;Union, Philippines.<Weather />
       </p>
 
