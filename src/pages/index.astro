@@ -3,6 +3,7 @@ import Base from "../layouts/Base.astro";
 import Card from "../components/Card.astro";
 import Rail from "../components/Rail.astro";
 import Kafra from "../components/Kafra.astro";
+import Weather from "../components/Weather.astro";
 import { featured } from "../data/projects";
 ---
 <Base>
@@ -13,9 +14,9 @@ import { featured } from "../data/projects";
       <p class="eyebrow" id="tagline">Full-Stack Developer &middot; HubSpot Administrator</p>
       <p class="blurb">
         I build scalable web applications from reusable components across the whole stack &mdash;
-        <strong>Node.js</strong>, <strong>React.js</strong>, <strong>Next.js</strong>,
+        <strong>Node.js</strong>, <strong>Nest.js</strong>, <strong>React.js</strong>, <strong>Next.js</strong>, <strong>Vite.js</strong>
         <strong>Supabase</strong>, <strong>WordPress</strong>, <strong>PHP</strong>, <strong>Laravel</strong>, <strong>Angular</strong> and <strong>HubSpot</strong>
-        &mdash; from La&nbsp;Union, Philippines.
+        &mdash; from La&nbsp;Union, Philippines.<Weather />
       </p>
 
       <Kafra />

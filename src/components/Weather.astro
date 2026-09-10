@@ -1,0 +1,118 @@
+---
+/* Conditions in La Union — icon and local time, nothing else.
+   Ships empty and stays hidden until the script has a reading, so a
+   no-JS visitor or a failed fetch simply sees the sentence end normally. */
+---
+<span class="wx" id="wx" hidden>
+  <span class="wx-icon" id="wx-icon" aria-hidden="true"></span>
+  <span class="sr-only" id="wx-said"></span>
+  <time class="wx-time" id="wx-time"></time>
+</span>
+
+<script is:inline>
+(function () {
+  var box  = document.getElementById("wx");
+  var icon = document.getElementById("wx-icon");
+  var said = document.getElementById("wx-said");
+  var slot = document.getElementById("wx-time");
+  if (!box) return;
+
+  var TZ = "Asia/Manila";     // fixed +08:00, no DST to account for
+  var shown, iso;
+  try {
+    shown = new Intl.DateTimeFormat("en-PH", { timeZone: TZ, hour: "numeric", minute: "2-digit" });
+    iso   = new Intl.DateTimeFormat("en-CA", {
+      timeZone: TZ, hour12: false,
+      year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit",
+    });
+  } catch (e) { return; }     // no timezone support -> leave the sentence alone
+
+  // ---- clock ----------------------------------------------------
+  function stamp() {
+    var p = {};
+    iso.formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+    var h = p.hour === "24" ? "00" : p.hour;   // some engines report midnight as 24
+    return p.year + "-" + p.month + "-" + p.day + "T" + h + ":" + p.minute + "+08:00";
+  }
+
+  function clock() {
+    slot.textContent = shown.format(new Date());
+    slot.setAttribute("datetime", stamp());
+    box.hidden = false;
+    box.classList.add("is-on");
+  }
+
+  // ---- icons ----------------------------------------------------
+  // Feather-weight strokes, matching the theme toggle and social marks.
+  function svg(inner) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" ' +
+           'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>';
+  }
+
+  var SUN   = '<circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M4.2 4.2l1.7 1.7' +
+              'M18.1 18.1l1.7 1.7M2 12h2.4M19.6 12H22M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/>';
+  var MOON  = '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/>';
+  var CLOUD = '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>';
+
+  var SUN_SM  = '<circle cx="7.5" cy="7.5" r="3"/><path d="M7.5 1.6v1.5M7.5 11.9v1.5' +
+                'M3.3 3.3l1.1 1.1M10.6 10.6l1.1 1.1M1.6 7.5h1.5M11.9 7.5h1.5' +
+                'M3.3 11.7l1.1-1.1M10.6 4.4l1.1-1.1"/>';
+  var MOON_SM = '<g transform="translate(1.5 .5) scale(.55)" vector-effect="non-scaling-stroke">' +
+                '<path vector-effect="non-scaling-stroke" d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></g>';
+  // filled with the page ground so it occludes the sun/moon sitting behind it
+  var CLOUD_FRONT = '<g transform="translate(4.6 7.2) scale(.72)">' +
+                    '<path vector-effect="non-scaling-stroke" fill="var(--ground)" ' +
+                    'd="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></g>';
+
+  var RAIN  = '<path d="M20 16.6A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/>' +
+              '<path d="M8 15.5v4.2M12 17.5v4.6M16 15.5v4.2"/>';
+  var SNOW  = '<path d="M20 17.6A5 5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.25"/>' +
+              '<path d="M8 16h.01M8 20h.01M12 18h.01M12 22h.01M16 16h.01M16 20h.01"/>';
+  var STORM = '<path d="M19 16.9A5 5 0 0 0 18 7h-1.26a8 8 0 1 0-11.62 9"/>' +
+              '<path d="M13 11l-4 6h6l-4 6"/>';
+  var FOG   = '<path d="M3 8.5h18M6 12.5h15M3 16.5h13M8 20.5h11"/>';
+
+  // WMO codes -> icon + the words a screen reader gets
+  function pick(code, isDay) {
+    if (code === 0)                       return [isDay ? SUN : MOON, "Clear"];
+    if (code === 1 || code === 2)         return [(isDay ? SUN_SM : MOON_SM) + CLOUD_FRONT, "Partly cloudy"];
+    if (code === 3)                       return [CLOUD, "Overcast"];
+    if (code === 45 || code === 48)       return [FOG, "Fog"];
+    if (code >= 71 && code <= 77)         return [SNOW, "Snow"];
+    if (code === 85 || code === 86)       return [SNOW, "Snow showers"];
+    if (code >= 95)                       return [STORM, "Thunderstorms"];
+    if (code >= 51 && code <= 57)         return [RAIN, "Drizzle"];
+    if (code >= 61 && code <= 67)         return [RAIN, "Rain"];
+    if (code >= 80 && code <= 82)         return [RAIN, "Rain showers"];
+    return [CLOUD, "Cloudy"];
+  }
+
+  function paint(code, isDay) {
+    var got = pick(code, isDay);
+    icon.innerHTML = svg(got[0]);
+    said.textContent = got[1] + " in La Union, local time";
+    box.title = got[1] + " in La Union";
+  }
+
+  var last = 0;
+  function load() {
+    if (Date.now() - last < 600000) return;   // the route is CDN-cached anyway
+    last = Date.now();
+    fetch("/api/weather", { headers: { accept: "application/json" } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { if (d && typeof d.code === "number") paint(d.code, d.day !== false); })
+      .catch(function () { /* clock alone is fine */ });
+  }
+
+  // ---- run ------------------------------------------------------
+  var tick = null;
+  function play() { clock(); load(); tick = tick || setInterval(clock, 30000); }
+  function stop() { clearInterval(tick); tick = null; }
+
+  document.addEventListener("visibilitychange", function () {
+    document.hidden ? stop() : play();       // no timers in a background tab
+  });
+
+  play();
+})();
+</script>
