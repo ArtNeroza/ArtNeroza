@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, envField } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import vercel from "@astrojs/vercel";
 
@@ -18,10 +18,23 @@ export default defineConfig({
   // be hardcoded there — but two policies both have to allow a script, so the
   // intersection is hashes only. The header is what carries frame-ancestors,
   // which a meta policy is not allowed to set.
-  experimental: {
+  security: {
     csp: {
       directives: ["default-src 'none'", "img-src 'self' data:", "font-src 'self'", "connect-src 'self'", "base-uri 'none'", "form-action 'none'"],
       styleDirective: { resources: ["'self'", "'unsafe-inline'"] },
+    },
+  },
+
+  // Secrets go through astro:env so they are read from the environment at
+  // runtime and never written into the bundle. Reaching for import.meta.env
+  // instead pulls in a snapshot of the whole build environment — including the
+  // key — which is exactly what the review flagged.
+  env: {
+    schema: {
+      GEMINI_API_KEY:    envField.string({ context: "server", access: "secret", optional: true }),
+      CHAT_SECRET:       envField.string({ context: "server", access: "secret", optional: true }),
+      KV_REST_API_URL:   envField.string({ context: "server", access: "secret", optional: true }),
+      KV_REST_API_TOKEN: envField.string({ context: "server", access: "secret", optional: true }),
     },
   },
 

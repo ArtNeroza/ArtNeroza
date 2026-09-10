@@ -11,6 +11,7 @@
  * byte, then the tag), because the text isn't known when the headers go out.
  */
 import { createHmac, createHash, timingSafeEqual } from "node:crypto";
+import { CHAT_SECRET, GEMINI_API_KEY } from "astro:env/server";
 
 /** RS. Never appears in model prose, so it can't be spoofed into the answer. */
 export const TRAILER = "\u001e";
@@ -21,18 +22,10 @@ export const TRAILER = "\u001e";
  * and cold starts, and the key itself is not derivable from the digest.
  */
 function secret(): string | undefined {
-  if (process.env.CHAT_SECRET) return process.env.CHAT_SECRET;
-
-  // Same resolution order as provider.ts: Vercel puts the key in process.env at
-  // runtime, while a local .env only reaches import.meta.env. Without the dev
-  // arm, signing would silently no-op locally and every assistant turn would be
-  // dropped as unverifiable — a behaviour difference that would only surface in
-  // production. The read is behind import.meta.env.DEV so nothing is inlined
-  // into the deployed bundle.
-  const key = process.env.GEMINI_API_KEY
-    ?? (import.meta.env.DEV ? import.meta.env.GEMINI_API_KEY : undefined);
-
-  return key ? createHash("sha256").update(`kafra:${key}`).digest("hex") : undefined;
+  if (CHAT_SECRET) return CHAT_SECRET;
+  return GEMINI_API_KEY
+    ? createHash("sha256").update(`kafra:${GEMINI_API_KEY}`).digest("hex")
+    : undefined;
 }
 
 export function sign(text: string): string {

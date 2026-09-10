@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { SYSTEM } from "./prompt";
+import { GEMINI_API_KEY } from "astro:env/server";
 
 export type Turn = { role: "user" | "assistant"; content: string };
 
@@ -18,18 +19,13 @@ export const MODEL = "gemini-3.5-flash-lite";
 export const MAX_ANSWER_TOKENS = 1200;
 
 /**
- * Vercel injects real env vars into process.env at runtime; a local .env is
- * loaded by Vite into import.meta.env instead.
- *
- * The import.meta.env read is deliberately behind `import.meta.env.DEV`. Vite
- * replaces both with literals at build time, so in a production build the
- * condition folds to `false` and the whole branch — key included — is dropped
- * from the bundle. Reading it unconditionally would inline whatever key sat in
- * the local .env into the deployed artifact.
+ * Read through astro:env, which resolves secrets from the environment at
+ * runtime and keeps them out of the bundle. The obvious-looking alternative —
+ * import.meta.env — inlines a snapshot of the entire build environment into the
+ * server chunk, key included, which is what the security review caught.
  */
 function apiKey(): string | undefined {
-  if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
-  return import.meta.env.DEV ? import.meta.env.GEMINI_API_KEY : undefined;
+  return GEMINI_API_KEY ?? undefined;
 }
 
 export function isConfigured() {

@@ -53,7 +53,9 @@ function trustedHistory(raw: unknown): Turn[] {
 }
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
-  const DEV = import.meta.env.DEV;
+  // Not import.meta.env.DEV: touching import.meta.env in a server chunk pulls a
+  // snapshot of the whole build environment into the bundle.
+  const DEV = process.env.NODE_ENV !== "production";
 
   if (!isConfigured()) {
     return text("Kafra is offline right now — please email art.neroza@gmail.com.", 503);

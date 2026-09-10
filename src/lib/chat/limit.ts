@@ -17,8 +17,10 @@
  * increment.
  */
 
-const URL_ = process.env.KV_REST_API_URL;
-const TOKEN = process.env.KV_REST_API_TOKEN;
+import { KV_REST_API_URL, KV_REST_API_TOKEN } from "astro:env/server";
+
+const URL_ = KV_REST_API_URL;
+const TOKEN = KV_REST_API_TOKEN;
 
 export const DURABLE = Boolean(URL_ && TOKEN);
 
