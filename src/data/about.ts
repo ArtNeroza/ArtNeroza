@@ -25,8 +25,8 @@ What he does:
 - Administers and integrates HubSpot: Ops Hub custom-code actions, webhooks, CRM integrations.
 - Headless architectures: WordPress or Shopify as the content layer with Next.js in front.
 
-Frontend: HTML, CSS, JavaScript, TypeScript, React, Next.js, Angular, Vue, Astro.
-Backend: Node.js, Express, PHP, Laravel, GraphQL.
+Frontend: HTML, CSS, JavaScript, TypeScript, React, Next.js, Angular, Vue, Vite, Astro.
+Backend: Node.js, Nest.js Express, PHP, Laravel, GraphQL.
 Data and cloud: PostgreSQL, MongoDB, Supabase, AWS, Vercel.
 CMS and CRM: WordPress, Shopify, HubSpot.
 AI: Claude Code, ChatGPT, Gemini; builds generative-AI features into applications.

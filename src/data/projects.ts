@@ -10,7 +10,7 @@ export type Project = {
 /** The 2x2 grid under the masthead. */
 export const featured: Project[] = [
   { name: "Headless WordPress", stack: "WPGraphQL · Next.js · ISR" },
-  { name: "Web App",            stack: "Next.js · Vite · Nest.js · Supabase · Auth + RLS" },
+  { name: "Web App",            stack: "Next.js · Vite.js · Nest.js · Supabase · Auth + RLS" },
   { name: "CRM Integration",    stack: "HubSpot Ops Hub · Custom code · Webhooks" },
   { name: "Storefront & Theme", stack: "Shopify · Custom WP theme · Gutenberg" },
 ];
