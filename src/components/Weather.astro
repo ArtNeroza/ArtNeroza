@@ -1,19 +1,19 @@
 ---
-/* Conditions in La Union — icon and local time, nothing else.
+/* Conditions in La Union — icon, condition, local time.
    Ships empty and stays hidden until the script has a reading, so a
-   no-JS visitor or a failed fetch simply sees the sentence end normally. */
+   no-JS visitor or a failed fetch simply sees the sentence end normally.
+   No whitespace between the spans: the gaps are margins, so they don't
+   change with the paragraph's word spacing. */
 ---
-<span class="wx" id="wx" hidden>
-  <span class="wx-icon" id="wx-icon" aria-hidden="true"></span>
-  <span class="sr-only" id="wx-said"></span>
-  <time class="wx-time" id="wx-time"></time>
-</span>
+<span class="wx" id="wx" hidden><span class="wx-icon" id="wx-icon" aria-hidden="true"></span><span
+  class="wx-label" id="wx-said"></span><span class="sr-only" id="wx-where"></span><time class="wx-time" id="wx-time"></time></span>
 
 <script is:inline>
 (function () {
   var box  = document.getElementById("wx");
   var icon = document.getElementById("wx-icon");
   var said = document.getElementById("wx-said");
+  var where = document.getElementById("wx-where");
   var slot = document.getElementById("wx-time");
   if (!box) return;
 
@@ -90,7 +90,8 @@
   function paint(code, isDay) {
     var got = pick(code, isDay);
     icon.innerHTML = svg(got[0]);
-    said.textContent = got[1] + " in La Union, local time";
+    said.textContent = got[1];
+    where.textContent = " in La Union, local time";   // context the visible label leaves out
     box.title = got[1] + " in La Union";
   }
 

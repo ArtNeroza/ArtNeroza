@@ -254,13 +254,11 @@ h1 .mid{color:var(--name-2);font-weight:600;}
 }
 .blurb strong{color:var(--ink);font-weight:500;}
 
-/* La Union conditions — icon and local time, tucked onto the blurb's last line */
+/* La Union conditions — icon, condition, local time on the blurb's last line.
+   Kept inline (not inline-flex) so the label and time sit on the paragraph's
+   own baseline; only the icon is nudged, against that same baseline. */
 .wx{
-  display:inline-flex;
-  align-items:center;
-  gap:.34em;
   margin-left:.5em;
-  translate:0 .12em;              /* optically seats it on the text baseline */
   font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   font-size:.8em;
   font-weight:500;
@@ -271,8 +269,15 @@ h1 .mid{color:var(--name-2);font-weight:600;}
   transition:opacity .5s ease;
 }
 .wx.is-on{opacity:1;}
-.wx-icon{display:inline-flex;color:var(--accent);}
-.wx-icon svg{width:1.45em;height:1.45em;overflow:visible;animation:wx-in .5s ease both;}
+.wx-icon{color:var(--accent);}
+.wx-icon svg{
+  width:1.35em;height:1.35em;
+  vertical-align:-.32em;          /* centres the glyph on the x-height */
+  margin-right:.32em;
+  overflow:visible;
+  animation:wx-in .5s ease both;
+}
+.wx-label{margin-right:.5em;}
 @keyframes wx-in{from{opacity:0;}to{opacity:1;}}
 
 /* ---- Kafra Copilot ------------------------------------------- */
