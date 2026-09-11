@@ -1,24 +1,31 @@
 ---
 import Card from "./Card.astro";
-import { recents } from "../data/projects";
+import { projects } from "../data/projects";
+
+// Sorted here rather than in the browser so the default order is already right
+// in the HTML: a no-JS visitor still gets A-Z, and there is no visible reshuffle
+// once the script runs.
+const az = [...projects].sort((a, b) => a.name.localeCompare(b.name));
 ---
-<section class="recents rise" aria-labelledby="recents-label">
+<section class="projects rise" aria-labelledby="projects-label">
   <div class="rail-head">
-    <h2 class="label" id="recents-label">Recents</h2>
-    <div class="rail-nav">
-      <button class="rail-btn" type="button" data-dir="-1" aria-label="Scroll to previous recent work" aria-controls="rail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
-      <button class="rail-btn" type="button" data-dir="1" aria-label="Scroll to next recent work" aria-controls="rail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+    <h2 class="label" id="projects-label">Projects</h2>
+
+    <div class="rail-tools">
+      <div class="rail-sort" role="group" aria-label="Sort projects by name">
+        <button class="rail-btn" type="button" data-sort="asc" aria-pressed="true" title="Sort A to Z" aria-label="Sort A to Z" aria-controls="rail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h5M4 12h9M4 17h13"/></svg></button>
+        <button class="rail-btn" type="button" data-sort="desc" aria-pressed="false" title="Sort Z to A" aria-label="Sort Z to A" aria-controls="rail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h13M4 12h9M4 17h5"/></svg></button>
+      </div>
+
+      <div class="rail-nav">
+        <button class="rail-btn" type="button" data-dir="-1" aria-label="Scroll to previous project" aria-controls="rail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+        <button class="rail-btn" type="button" data-dir="1" aria-label="Scroll to next project" aria-controls="rail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
     </div>
   </div>
 
-  <div class="rail" id="rail" tabindex="0" role="group" aria-labelledby="recents-label">
-    {recents.map((p) => <Card {...p} />)}
-
-    <!-- SAMPLE placeholder — swap for a real project or delete -->
-    <div class="card card--ph" aria-hidden="true">
-      <span class="name">Placeholder Project</span>
-      <span class="stack">Stack · goes · here<span class="year">20XX</span></span>
-    </div>
+  <div class="rail" id="rail" tabindex="0" role="group" aria-labelledby="projects-label">
+    {az.map((p) => <Card {...p} />)}
   </div>
 </section>
 
@@ -27,7 +34,8 @@ import { recents } from "../data/projects";
 (function(){
   var rail = document.getElementById('rail');
   if(!rail) return;
-  var btns  = document.querySelectorAll('.rail-btn');
+  var btns  = document.querySelectorAll('.rail-nav .rail-btn');
+  var sorts = document.querySelectorAll('[data-sort]');
   var calm  = matchMedia('(prefers-reduced-motion: reduce)');
   var DWELL = 5000, timer = null;
 
@@ -61,11 +69,38 @@ import { recents } from "../data/projects";
     b.addEventListener('click', function(){ go(Number(b.dataset.dir)); play(); });
   });
 
+  /* ---- sort ------------------------------------------------------
+     Reorders the cards already in the DOM, so it costs no request and
+     works off the name each card is actually showing. The markup ships
+     A-Z, so this only ever has to handle a change away from that. */
+  function label(card){
+    var n = card.querySelector('.name');
+    return (n ? n.textContent : '').trim();
+  }
+  function applySort(dir){
+    Array.prototype.slice.call(rail.children)
+      .sort(function(a, b){
+        var c = label(a).localeCompare(label(b));
+        return dir === 'desc' ? -c : c;
+      })
+      .forEach(function(card){ rail.appendChild(card); });   // re-append = reorder
+
+    sorts.forEach(function(b){
+      b.setAttribute('aria-pressed', String(b.dataset.sort === dir));
+    });
+    rail.scrollTo({left: 0, behavior: calm.matches ? 'auto' : 'smooth'});
+    sync();
+    play();
+  }
+  sorts.forEach(function(b){
+    b.addEventListener('click', function(){ applySort(b.dataset.sort); });
+  });
+
   // pause whenever a human is engaged with it, or the tab is hidden
   ['pointerenter','focusin','touchstart'].forEach(function(e){ rail.addEventListener(e, stop, {passive:true}); });
   ['pointerleave','focusout'].forEach(function(e){ rail.addEventListener(e, play, {passive:true}); });
-  document.querySelector('.rail-nav').addEventListener('pointerenter', stop, {passive:true});
-  document.querySelector('.rail-nav').addEventListener('pointerleave', play, {passive:true});
+  document.querySelector('.rail-tools').addEventListener('pointerenter', stop, {passive:true});
+  document.querySelector('.rail-tools').addEventListener('pointerleave', play, {passive:true});
   document.addEventListener('visibilitychange', function(){ document.hidden ? stop() : play(); });
 
   rail.addEventListener('scroll', sync, {passive:true});

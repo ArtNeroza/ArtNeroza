@@ -520,14 +520,8 @@ h1 .mid{color:var(--name-2);font-weight:600;}
   letter-spacing:.02em;
   color:var(--ink-dim);
 }
-.card .year{
-  flex:none;
-  color:var(--ink-mid);
-  font-variant-numeric:tabular-nums;
-}
-
-/* ---- recents rail ------------------------------------------- */
-.recents{display:flex;flex-direction:column;gap:.7rem;}
+/* ---- projects rail ------------------------------------------ */
+.projects{display:flex;flex-direction:column;gap:.7rem;}
 
 .rail-head{
   display:flex;
@@ -545,7 +539,16 @@ h1 .mid{color:var(--name-2);font-weight:600;}
   color:var(--ink-dim);
 }
 
+.rail-tools{display:flex;align-items:center;gap:.6rem;}
+.rail-sort{display:flex;gap:.35rem;}
 .rail-nav{display:flex;gap:.35rem;}
+
+/* the active sort reads as held-down, matching .rail-btn:hover */
+.rail-btn[aria-pressed="true"]{
+  color:var(--accent);
+  border-color:var(--line-hi);
+  background:var(--surface-hi);
+}
 .rail-btn{
   display:grid;
   /* minmax(0,1fr) — without it the implicit column sizes to max-content and
@@ -584,13 +587,6 @@ h1 .mid{color:var(--name-2);font-weight:600;}
 }
 .rail::-webkit-scrollbar{display:none;}
 .rail>.card{scroll-snap-align:start;}
-
-.card--ph{
-  border-style:dashed;
-  background:transparent;
-  color:var(--ink-dim);
-}
-.card--ph .name{color:var(--faint);font-weight:400;}
 
 /* ---- footer ------------------------------------------------- */
 .foot{

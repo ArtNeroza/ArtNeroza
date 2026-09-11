@@ -1,8 +1,8 @@
-import { featured, recents } from "./projects";
+import { featured, projects } from "./projects";
 
-const list = (items: { name: string; stack: string; year?: string }[]) =>
+const list = (items: { name: string; stack: string }[]) =>
   items
-    .map((p) => `<li><b>${p.name}</b> — ${p.stack}${p.year ? ` · ${p.year}` : ""}</li>`)
+    .map((p) => `<li><b>${p.name}</b> — ${p.stack}</li>`)
     .join("");
 
 
@@ -13,7 +13,7 @@ const list = (items: { name: string; stack: string; year?: string }[]) =>
  */
 export const facts = `
 Name: Art C. Neroza. Goes by Art.
-Role: Full-Stack Developer and HubSpot Administrator.
+Role: Senior Full-Stack Developer and Business Solutions Engineer.
 Based: La Union, Philippines. Timezone GMT+8. Works remotely with teams globally.
 Availability: open to contract, gig and full-time remote work.
 Contact: me@artneroza.com. Also on LinkedIn (art-neroza) and GitHub (ArtNeroza).
@@ -31,8 +31,8 @@ Data and cloud: PostgreSQL, MongoDB, Supabase, AWS, Vercel.
 CMS and CRM: WordPress, Shopify, HubSpot.
 AI: Claude Code, ChatGPT, Gemini; builds generative-AI features into applications.
 
-Recent projects:
-${recents.map((p) => `- ${p.name}${p.year ? ` (${p.year})` : ""}: ${p.stack}`).join("\n")}
+Projects:
+${projects.map((p) => `- ${p.name}: ${p.stack}`).join("\n")}
 
 Areas he builds in:
 ${featured.map((p) => `- ${p.name}: ${p.stack}`).join("\n")}
@@ -56,7 +56,7 @@ export const canned: QA[] = [
   {
     id: "about",
     q: "Tell me about Art.",
-    a: `<p>Art C. Neroza is a full-stack developer and HubSpot administrator based in
+    a: `<p>Art C. Neroza is a senior full-stack developer and business solutions engineer based in
         La&nbsp;Union, Philippines (GMT+8), working remotely with teams globally.</p>
         <p>He builds web applications end to end — from the database and API layer through
         to the interface — and administers the CRM systems businesses run on.</p>`,
@@ -64,7 +64,7 @@ export const canned: QA[] = [
   {
     id: "projects",
     q: "What has he built?",
-    a: `<p>Recent work:</p><ul>${list(recents)}</ul>
+    a: `<p>Projects:</p><ul>${list(projects)}</ul>
         <p>Areas he builds in:</p><ul>${list(featured)}</ul>`,
   },
   {
